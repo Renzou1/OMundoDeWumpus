@@ -2,12 +2,14 @@ package org.example;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Random;
 import java.util.Scanner;
 
 import static org.example.Main.*;
 
-public class Game {
+public class Game implements ActionListener {
     private int width;
     private int height;
     private Camp[][] board;
@@ -18,6 +20,14 @@ public class Game {
     private int size = 15;
     private boolean over = false;
     private JTextArea console;
+    private JButton lantern_b;
+    private JButton gold_b;
+    private JButton wood_b;
+    private JButton up_b;
+    private JButton right_b;
+    private JButton left_b;
+    private JButton down_b;
+    private int choice;
     static final int titleSize = 40;
 
     Game(int width, int height)
@@ -48,18 +58,29 @@ public class Game {
         playerPanel.setLayout(new GridLayout(0,1));
 
 
-        JButton up_b = new JButton();
+        up_b = new JButton();
         up_b.setVisible(true);
-        JButton right_b = new JButton();
+        up_b.addActionListener(this);
+        right_b = new JButton();
         right_b.setVisible(true);
-        JButton left_b = new JButton();
+        right_b.addActionListener(this);
+        left_b = new JButton();
         left_b.setVisible(true);
-        JButton down_b = new JButton();
+        left_b.addActionListener(this);
+        down_b = new JButton();
         down_b.setVisible(true);
-        JButton lantern_b = new JButton("Usar lanterna");
+        down_b.addActionListener(this);
+        lantern_b = new JButton("Usar lanterna");
         lantern_b.setVisible(true);
-        JButton ouro_b = new JButton("Pegar ouro");
-        JButton madeira_b = new JButton("Pegar madeira");
+        lantern_b.addActionListener(this);
+        gold_b = new JButton("Pegar ouro");
+        gold_b.setEnabled(false);
+        gold_b.setVisible(false);
+        gold_b.addActionListener(this);
+        wood_b = new JButton("Pegar madeira");
+        wood_b.setEnabled(false);
+        wood_b.setVisible(false);
+        wood_b.addActionListener(this);
 
         console = new JTextArea();
         console.setVisible(true);
@@ -73,9 +94,10 @@ public class Game {
         playerPanel.add(left_b);
         playerPanel.add(down_b);
         playerPanel.add(lantern_b);
-        playerPanel.add(ouro_b);
-        playerPanel.add(madeira_b);
+        playerPanel.add(gold_b);
+        playerPanel.add(wood_b);
         playerPanel.add(console);
+
 
         tilePanel.setBounds(0,0, (int)(0.8*width),height-titleSize);
         playerPanel.setBounds(tilePanel.getWidth(), 0,  width-tilePanel.getWidth(), height-titleSize);
@@ -238,108 +260,120 @@ public class Game {
     }
 
 
-    public void playerTurn(Scanner sc)
-    {
-        if(board[player.getX()][player.getY()].isWumpus() || player.getHealth() <= 0)
-        {
+    public void playerTurn(Scanner sc) {
+        if (board[player.getX()][player.getY()].isWumpus() || player.getHealth() <= 0) {
             player.setHealth(0);
             console.setText("Voce foi morto. Fim de Jogo\n");
             over = true;
             return;
-        }  else if(player.getX() == 0 && player.getY() == 0 && player.isGold())
-        {
+        } else if (player.getX() == 0 && player.getY() == 0 && player.isGold()) {
             console.setText("Voce ganhou! Parabens.\n");
             over = true;
+            return;
         }
-        if(board[player.getX()][player.getY()].isSmelly())
-        {
+
+        console.setText("");
+
+        if (board[player.getX()][player.getY()].isSmelly()) {
             console.append("Voce sente o cheiro do wumpus\n");
         }
-        if(board[player.getX()][player.getY()].isWindy())
-        {
+        if (board[player.getX()][player.getY()].isWindy()) {
             console.append("Voce sente o vento de um abismo\n");
         }
-        if(player.getX() == board.length - 1)
-        {
+        if (player.getX() == board.length - 1) {
             console.append("Parede a direita\n");
         }
-        if(player.getY() == 0)
-        {
+        if (player.getY() == 0) {
             console.append("Parede abaixo.\n");
         }
-        if(player.getY() == board.length - 1)
-        {
+        if (player.getY() == board.length - 1) {
             console.append("Parede acima.\n");
         }
-        if(player.getX() == 0)
-        {
+        if (player.getX() == 0) {
             console.append("Parede a esquerda.\n");
         }
-        if(player.getBattery() > 0) System.out.println("0. Use lantern");
-        System.out.println("1. Move up");
-        System.out.println("2. Move right");
-        System.out.println("3. Move left");
-        System.out.println("4. Move down");
-        if(board[player.getX()][player.getY()].isGold())
-        {
-            console.append("You can see something shiny...\n5. Pick the gold up");
-        }
-        if(board[player.getX()][player.getY()].isWood())
-        {
-            console.append("There`s wood where you stand\n6. Pick the wood up");
-        }
-        int choice = sc.nextInt();
-        if(choice == 0)
-        {
-            System.out.println("Escolha a direcao:");
-            System.out.println("1. up");
-            System.out.println("2. right");
-            System.out.println("3. left");
-            System.out.println("4. down");
-
-            choice = sc.nextInt();
-            player.useLantern(board, choice);
-        }
-        else if(choice == 1)
-        {
-            player.moveUp(board);
-        }
-        else if(choice == 2)
-        {
-            player.moveRight(board);
-        }
-        else if(choice == 3)
-        {
-            player.moveLeft(board);
-        }
-        else if(choice == 4)
-        {
-            player.moveDown(board);
-        }
-        else if(choice == 5 && board[player.getX()][player.getY()].isGold())
-        {
-            board[player.getX()][player.getY()].setGold(false);
-            player.setGold(true);
-            console.append("Ouro em inventario");
-        }
-        else if(choice == 6 && board[player.getX()][player.getY()].isWood())
-        {
-            player.setWood(player.getWood() + 1);
-            console.append("Madeiras em inventario: " + player.getWood());
-        }
-        if(board[player.getX()][player.getY()].isWumpus())
-        {
-            player.setHealth(0);
-            console.setText("Voce foi morto. Fim de Jogo.");
-            over = true;
-            return;
-        }  else if(player.getX() == 0 && player.getY() == 0 && player.isGold())
-        {
-            console.setText("Voce ganhou. Parabens!\n");
-            over = true;
-        }
 
 
+        if (player.getBattery() <= 0 && lantern_b.isVisible()) {
+            lantern_b.setVisible(false);
+            lantern_b.setEnabled(false);
+        }
+        if (board[player.getX()][player.getY()].isGold()) {
+            console.append("You can see something shiny...\n");
+            gold_b.setVisible(true);
+            gold_b.setEnabled(true);
+        }
+        if (board[player.getX()][player.getY()].isWood()) {
+            console.append("There`s wood where you stand\n");
+            wood_b.setVisible(true);
+            wood_b.setEnabled(true);
+        }
+        choice = -1;
+
+        while (choice <= 0) {
+
+            ActionListener al = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    while(choice <= 0) {
+                        if (e.getSource() == lantern_b) {
+                            choice = LANTERN;
+                        } else if (e.getSource() == up_b) {
+                            choice = UP;
+                        } else if (e.getSource() == right_b) {
+                            choice = RIGHT;
+                        } else if (e.getSource() == left_b) {
+                            choice = LEFT;
+                        } else if (e.getSource() == down_b) {
+                            choice = DOWN;
+                        } else if (e.getSource() == gold_b) {
+                            choice = GOLD;
+                        } else if (e.getSource() == wood_b) {
+                            choice = WOOD;
+                        }
+                    }
+                }
+            };
+            up_b.addActionListener(al);
+            right_b.addActionListener(al);
+            left_b.addActionListener(al);
+            down_b.addActionListener(al);
+            lantern_b.addActionListener(al);
+            gold_b.addActionListener(al);
+            wood_b.addActionListener(al);
+
+            if(choice == LANTERN) {
+                console.setText("Escolha a direcao");
+                while(choice == LANTERN || choice > DOWN){}
+                player.useLantern(board, choice);
+            }
+            if (choice == UP) {
+                player.moveUp(board);
+            } else if (choice == RIGHT) {
+                player.moveRight(board);
+            } else if (choice == LEFT) {
+                player.moveLeft(board);
+            } else if (choice == DOWN) {
+                player.moveDown(board);
+            } else if (choice == GOLD && board[player.getX()][player.getY()].isGold()) {
+                board[player.getX()][player.getY()].setGold(false);
+                player.setGold(true);
+                console.append("Ouro em inventario");
+            } else if (choice == WOOD && board[player.getX()][player.getY()].isWood()) {
+                player.setWood(player.getWood() + 1);
+                console.append("Madeiras em inventario: " + player.getWood());
+            }
+            if (board[player.getX()][player.getY()].isWumpus()) {
+                player.setHealth(0);
+                console.setText("Voce foi morto. Fim de Jogo.");
+                over = true;
+                return;
+            } else if (player.getX() == 0 && player.getY() == 0 && player.isGold()) {
+                console.setText("Voce ganhou. Parabens!\n");
+                over = true;
+                return;
+            }
+        }
     }
 
     public boolean isOver() {
@@ -352,5 +386,10 @@ public class Game {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
     }
 }

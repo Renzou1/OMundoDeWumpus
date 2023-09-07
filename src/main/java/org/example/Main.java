@@ -11,10 +11,13 @@ import java.util.Scanner;
 
 public class Main {
 
+    static final int LANTERN = 0;
     static final int UP = 1;
     static final int RIGHT = 2;
     static final int LEFT = 3;
     static final int DOWN = 4;
+    static final int GOLD = 5;
+    static final int WOOD = 6;
     private static int width;
     private static int height;
     private static boolean clear;
@@ -58,8 +61,6 @@ public class Main {
         Game game = new Game(width, height);
         Scanner sc = new Scanner(System.in);
         game.GenerateBoard(rand);
-
-        System.out.println("Welcome to wumpus\n");
 
         while(!game.isOver())
         {
