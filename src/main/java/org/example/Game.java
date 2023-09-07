@@ -8,6 +8,8 @@ import java.util.Scanner;
 import static org.example.Main.*;
 
 public class Game {
+    private int width;
+    private int height;
     private Camp[][] board;
     private Player player;
     private Wumpus wumpus;
@@ -15,24 +17,43 @@ public class Game {
     private JFrame gameFrame;
     private int size = 15;
     private boolean over = false;
+    static final int titleSize = 40;
+
+    Game(int  width, int height)
+    {
+        this.width = width;
+        this.height = height;
+    }
     public void GenerateBoard(Random rand) {
         board = new Camp[size][size];
         player = new Player();
         wumpus = new Wumpus();
         monster2 = new Monster2();
+        width = 1800;
+        height = 720;
 
         gameFrame = new JFrame();
         gameFrame.setVisible(true);
-        gameFrame.setSize(1024,720);
+        gameFrame.setSize(width,height);
         gameFrame.setTitle("O Mundo de Wumpus");
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        gameFrame.getContentPane().setLayout(new GridBagLayout());
+        gameFrame.getContentPane().setLayout(null);
+        gameFrame.setResizable(false);
         GridBagConstraints c = new GridBagConstraints();
         JLabel[][] campLabels = new JLabel[board.length][board.length];
         JPanel tilePanel = new JPanel();
-        //tilePanel.setBorder(BorderFactory.createEmptyBorder(100,100,100,100));
         tilePanel.setLayout(new GridLayout(board.length, board.length));
         tilePanel.setVisible(true);
+        JPanel playerPanel = new JPanel();
+        playerPanel.setVisible(true);
+        playerPanel.setLayout(new GridLayout(0,1));
+
+        JTextArea console = new JTextArea();
+        console.setVisible(true);
+        playerPanel.add(console);
+
+        tilePanel.setBounds(0,0, (int)(0.8*width),height-titleSize);
+        playerPanel.setBounds(tilePanel.getWidth(), 0,  width-tilePanel.getWidth(), height-titleSize);
 
         for(int i = 0; i < board.length; i++)
         {
@@ -40,28 +61,13 @@ public class Game {
             {
                 campLabels[i][j] = new JLabel();
                 campLabels[i][j].setVisible(true);
-                campLabels[i][j].setIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Camp.png"));
+                campLabels[i][j].setIcon(new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Camp.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT)));
                 tilePanel.add(campLabels[i][j]);
             }
         }
-        JPanel textPanel = new JPanel();
-        //textPanel.setLayout(new GridLayout());
-        textPanel.setVisible(true);
-        JTextArea console = new JTextArea();
-        console.setVisible(true);
-        console.setText("AAAAAAAAAAAAAAAAAAAAAA");
-        console.setPreferredSize(new Dimension(300, 720));
-        textPanel.add(console);
 
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 0.9;
-        c.ipadx = 200;
-        c.gridx = 0;
         gameFrame.getContentPane().add(tilePanel);
-        c.gridx = 0;
-        c.gridy = 1;
-        c.weightx = 0;
-        gameFrame.getContentPane().add(textPanel);
+        gameFrame.getContentPane().add(playerPanel);
         gameFrame.getContentPane().revalidate();
         gameFrame.getContentPane().repaint();
 
@@ -313,5 +319,13 @@ public class Game {
 
     public boolean isOver() {
         return over;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 }
