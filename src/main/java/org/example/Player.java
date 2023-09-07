@@ -4,52 +4,59 @@ public class Player {
     private int x = 0;
     private int y = 0;
     private int health = 100;
-
     private int battery = 2;
 
-    public void MoveUp(Camp[][] board)
+    public void moveUp(Camp[][] board)
     {
         if( y + 1 < board.length)
         {
             board[x][y].setPlayer(false);
             y++;
             board[x][y].setPlayer(true);
+            board[x][x].setHidden(false);
         }  else{
-            System.out.println("Wall upward\n");
+            System.out.println("Voce da de cara com a parede\n");
+            health--;
         }
     }
 
-    public void MoveRight(Camp[][] board)
+    public void moveRight(Camp[][] board)
     {
         if(x + 1 < board.length) {
             board[x][y].setPlayer(false);
             x++;
             board[x][y].setPlayer(true);
+            board[x][x].setHidden(false);
         }  else{
-            System.out.println("Wall forward\n");
+            System.out.println("Voce da de cara com a parede\n");
+            health--;
         }
     }
 
-    public void MoveLeft(Camp[][] board)
+    public void moveLeft(Camp[][] board)
     {
         if(x - 1 >= 0) {
             board[x][y].setPlayer(false);
             x--;
             board[x][y].setPlayer(true);
+            board[x][x].setHidden(false);
         }  else {
-            System.out.println("Wall forward\n");
+            System.out.println("Voce da de cara com a parede\n");
+            health--;
         }
     }
 
-    public void MoveDown(Camp[][] board)
+    public void moveDown(Camp[][] board)
     {
         if(y - 1 >= 0)
         {
             board[x][y].setPlayer(false);
             y--;
             board[x][y].setPlayer(true);
+            board[x][x].setHidden(false);
         }  else{
-            System.out.println("Wall downard\n");
+            System.out.println("Voce da de cara com a parede\n");
+            health--;
         }
     }
 
