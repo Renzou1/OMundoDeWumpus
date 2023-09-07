@@ -1,5 +1,7 @@
 package org.example;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -10,16 +12,61 @@ public class Game {
     private Player player;
     private Wumpus wumpus;
     private Monster2 monster2;
+    private JFrame gameFrame;
+    private int size = 15;
     private boolean over = false;
-    private static final int size = 15;
     public void GenerateBoard(Random rand) {
         board = new Camp[size][size];
         player = new Player();
         wumpus = new Wumpus();
         monster2 = new Monster2();
 
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
+        gameFrame = new JFrame();
+        gameFrame.setVisible(true);
+        gameFrame.setSize(1024,720);
+        gameFrame.setTitle("O Mundo de Wumpus");
+        gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        gameFrame.getContentPane().setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        JLabel[][] campLabels = new JLabel[board.length][board.length];
+        JPanel tilePanel = new JPanel();
+        //tilePanel.setBorder(BorderFactory.createEmptyBorder(100,100,100,100));
+        tilePanel.setLayout(new GridLayout(board.length, board.length));
+        tilePanel.setVisible(true);
+
+        for(int i = 0; i < board.length; i++)
+        {
+            for(int j = 0; j < board.length; j++)
+            {
+                campLabels[i][j] = new JLabel();
+                campLabels[i][j].setVisible(true);
+                campLabels[i][j].setIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Camp.png"));
+                tilePanel.add(campLabels[i][j]);
+            }
+        }
+        JPanel textPanel = new JPanel();
+        //textPanel.setLayout(new GridLayout());
+        textPanel.setVisible(true);
+        JTextArea console = new JTextArea();
+        console.setVisible(true);
+        console.setText("AAAAAAAAAAAAAAAAAAAAAA");
+        console.setPreferredSize(new Dimension(300, 720));
+        textPanel.add(console);
+
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 0.9;
+        c.ipadx = 200;
+        c.gridx = 0;
+        gameFrame.getContentPane().add(tilePanel);
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weightx = 0;
+        gameFrame.getContentPane().add(textPanel);
+        gameFrame.getContentPane().revalidate();
+        gameFrame.getContentPane().repaint();
+
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board.length; j++) {
                 board[i][j] = new Camp();
             }
         }
@@ -36,8 +83,8 @@ public class Game {
         } while (x == 0 && y == 0);
 
         board[x][y].setPit(true);
-        if(x + 1 < size) board[x+1][y].setWindy(true);
-        if(y + 1 < size) board[x][y+1].setWindy(true);
+        if(x + 1 < board.length) board[x+1][y].setWindy(true);
+        if(y + 1 < board.length) board[x][y+1].setWindy(true);
         if(x - 1 >= 0) board[x-1][y].setWindy(true);
         if(y - 1 >= 0) board[x][y-1].setWindy(true);
 
@@ -79,7 +126,7 @@ public class Game {
 
     public void monsterTurn(Random rand)
     {
-        if(over == true) return;
+        if(over) return;
 
         //wumpus movement
         int wumpusDirection = rand.nextInt(4) + 1;
@@ -181,7 +228,7 @@ public class Game {
         {
             System.out.println("Voce sente o vento de um abismo");
         }
-        if(player.getX() == size - 1)
+        if(player.getX() == board.length - 1)
         {
             System.out.println("Parede a direita");
         }
@@ -189,7 +236,7 @@ public class Game {
         {
             System.out.println("Parede abaixo.");
         }
-        if(player.getY() == size - 1)
+        if(player.getY() == board.length - 1)
         {
             System.out.println("Parede acima.");
         }
@@ -262,9 +309,6 @@ public class Game {
         }
 
 
-    }
-    public static int getSize() {
-        return size;
     }
 
     public boolean isOver() {
