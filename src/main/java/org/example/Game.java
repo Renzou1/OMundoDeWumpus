@@ -118,7 +118,6 @@ public class Game {
             }  else{
                 monster2.setX(monster2.getX() + 1);
             }
-            monster2.checkPlayerContact(player);
         }  else if (monster2Direction1 == RIGHT && monster2.getX() + 2 < board.length)
         {
             monster2.setX(monster2.getX() + 1);
@@ -132,8 +131,6 @@ public class Game {
             }  else {
                 monster2.setY(monster2.getY() + 1);
             }
-            monster2.checkPlayerContact(player);
-
         }  else if (monster2Direction1 == LEFT && monster2.getX() - 2 < board.length)
         {
             monster2.setX(monster2.getX() - 1);
@@ -147,24 +144,19 @@ public class Game {
             }  else{
                 monster2.setY(monster2.getY() + 1);
             }
-            monster2.checkPlayerContact(player);
-
         }  else if (monster2Direction1 == DOWN && monster2.getY() - 2 < board.length)
         {
             monster2.setY(monster2.getY() - 1);
             monster2.checkPlayerContact(player);
             monster2.setY(monster2.getY() - 1);
-            monster2.checkPlayerContact(player);
-
             if(monster2Direction2 == 0 && monster2.getX() - 1 >= 0)  //left
             {
                 monster2.setX(monster2.getX() - 1);
             }  else{
                 monster2.setX(monster2.getX() + 1);
             }
-            monster2.checkPlayerContact(player);
-
         }
+        monster2.checkPlayerContact(player); // after second movement
     }
 
 
