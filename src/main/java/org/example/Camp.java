@@ -5,12 +5,13 @@ public class Camp {
     private boolean isSmelly = false;
     private boolean isWindy = false;
     private boolean isPlayer = false;
-
     private boolean isWumpus = false;
-
     private boolean isMonster2 = false;
+    private boolean isHidden = true;
+    private boolean isWood = false;
+    private boolean isGold = false;
 
-    public boolean IsPit(){
+    public boolean isPit(){
         return isPit;
     }
 
@@ -19,7 +20,7 @@ public class Camp {
         this.isPit = isPit;
     }
 
-    public boolean IsSmelly()
+    public boolean isSmelly()
     {
         return isSmelly;
     }
@@ -45,5 +46,44 @@ public class Camp {
 
     public void setPlayer(boolean isPlayer) {
         this.isPlayer = isPlayer;
+    }
+
+    public boolean isHidden() {
+        return isHidden;
+    }
+    public void setHidden(boolean hidden) {
+        isHidden = hidden;
+    }
+
+    public boolean isWumpus() {
+        return isWumpus;
+    }
+
+    public void setWumpus(boolean wumpus) {
+        isWumpus = wumpus;
+    }
+
+    public boolean isMonster2() {
+        return isMonster2;
+    }
+
+    public void setMonster2(boolean monster2) {
+        isMonster2 = monster2;
+    }
+
+    public boolean isWood() {
+        return isWood;
+    }
+
+    public void setWood(boolean wood) {
+        isWood = wood;
+    }
+
+    public boolean isGold() {
+        return isGold;
+    }
+
+    public void setGold(boolean gold) {
+        isGold = gold;
     }
 }
