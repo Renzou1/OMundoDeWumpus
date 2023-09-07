@@ -1,10 +1,14 @@
 package org.example;
 
+import static org.example.Main.*;
+
 public class Player {
     private int x = 0;
     private int y = 0;
     private int health = 100;
+    private int wood = 0;
     private int battery = 2;
+    private boolean gold = false;
 
     public void moveUp(Camp[][] board)
     {
@@ -15,7 +19,7 @@ public class Player {
             board[x][y].setPlayer(true);
             board[x][x].setHidden(false);
         }  else{
-            System.out.println("Voce da de cara com a parede\n");
+            System.out.println("Voce da de cara com a parede");
             health--;
         }
     }
@@ -28,7 +32,7 @@ public class Player {
             board[x][y].setPlayer(true);
             board[x][x].setHidden(false);
         }  else{
-            System.out.println("Voce da de cara com a parede\n");
+            System.out.println("Voce da de cara com a parede");
             health--;
         }
     }
@@ -41,7 +45,7 @@ public class Player {
             board[x][y].setPlayer(true);
             board[x][x].setHidden(false);
         }  else {
-            System.out.println("Voce da de cara com a parede\n");
+            System.out.println("Voce da de cara com a parede");
             health--;
         }
     }
@@ -55,8 +59,38 @@ public class Player {
             board[x][y].setPlayer(true);
             board[x][x].setHidden(false);
         }  else{
-            System.out.println("Voce da de cara com a parede\n");
+            System.out.println("Voce da de cara com a parede");
             health--;
+        }
+    }
+
+    public void useLantern(Camp[][] board, int direction)
+    {
+        int current_x = x;
+        int current_y = y;
+        if(direction == UP)
+        {
+            while(current_y < board.length) {
+                board[x][current_y++].setHidden(false);
+            }
+        }
+        else if(direction == RIGHT)
+        {
+            while(current_x < board.length) {
+                board[current_x++][y].setHidden(false);
+            }
+        }
+        else if(direction == LEFT)
+        {
+            while(current_x > 0) {
+                board[current_x--][y].setHidden(false);
+            }
+        }
+        else if(direction == DOWN)
+        {
+            while(current_y < board.length) {
+                board[x][current_y--].setHidden(false);
+            }
         }
     }
 
@@ -90,5 +124,21 @@ public class Player {
 
     public void setBattery(int battery) {
         this.battery = battery;
+    }
+
+    public boolean isGold() {
+        return gold;
+    }
+
+    public void setGold(boolean gold) {
+        this.gold = gold;
+    }
+
+    public int getWood() {
+        return wood;
+    }
+
+    public void setWood(int wood) {
+        this.wood = wood;
     }
 }
