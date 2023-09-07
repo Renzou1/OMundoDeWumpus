@@ -23,10 +23,10 @@ public class Main {
         inicio.setTitle("Escolha resolucao");
         inicio.setLayout(new GridLayout(1,2));
         JTextField width_t = new JTextField();
-        width_t.setText("width");
+        width_t.setText("1024");
         width_t.setVisible(true);
         JTextField height_t = new JTextField();
-        height_t.setText("height");
+        height_t.setText("720");
         height_t.setVisible(true);
         JButton ok = new JButton("OK");
         ok.setVisible(true);
@@ -37,6 +37,7 @@ public class Main {
         inicio.setVisible(true);
         inicio.setBounds(0,0, 300, 100);
         inicio.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         while(!clear) {
             ok.addActionListener(new ActionListener() {
                 @Override
@@ -46,10 +47,13 @@ public class Main {
                         width = Integer.parseInt(width_t.getText());
                         height = Integer.parseInt(height_t.getText());
                         clear = true;
+                        inicio.setVisible(false);
+                        inicio.dispose();
                     }
                 }
             });
         }
+
         Random rand = new Random();
         Game game = new Game(width, height);
         Scanner sc = new Scanner(System.in);

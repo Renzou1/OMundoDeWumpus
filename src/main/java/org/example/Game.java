@@ -17,9 +17,10 @@ public class Game {
     private JFrame gameFrame;
     private int size = 15;
     private boolean over = false;
+    private JTextArea console;
     static final int titleSize = 40;
 
-    Game(int  width, int height)
+    Game(int width, int height)
     {
         this.width = width;
         this.height = height;
@@ -29,8 +30,6 @@ public class Game {
         player = new Player();
         wumpus = new Wumpus();
         monster2 = new Monster2();
-        width = 1800;
-        height = 720;
 
         gameFrame = new JFrame();
         gameFrame.setVisible(true);
@@ -48,8 +47,34 @@ public class Game {
         playerPanel.setVisible(true);
         playerPanel.setLayout(new GridLayout(0,1));
 
-        JTextArea console = new JTextArea();
+
+        JButton up_b = new JButton();
+        up_b.setVisible(true);
+        JButton right_b = new JButton();
+        right_b.setVisible(true);
+        JButton left_b = new JButton();
+        left_b.setVisible(true);
+        JButton down_b = new JButton();
+        down_b.setVisible(true);
+        JButton lantern_b = new JButton("Usar lanterna");
+        lantern_b.setVisible(true);
+        JButton ouro_b = new JButton("Pegar ouro");
+        JButton madeira_b = new JButton("Pegar madeira");
+
+        console = new JTextArea();
         console.setVisible(true);
+        up_b.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\upArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width), (int)((height-titleSize)/7), Image.SCALE_DEFAULT)));
+        right_b.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\rightArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width), (int)((height-titleSize)/7), Image.SCALE_DEFAULT)));
+        left_b.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\leftArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width), (int)((height-titleSize)/7), Image.SCALE_DEFAULT)));
+        down_b.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\downArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width), (int)((height-titleSize)/7), Image.SCALE_DEFAULT)));
+
+        playerPanel.add(up_b);
+        playerPanel.add(right_b);
+        playerPanel.add(left_b);
+        playerPanel.add(down_b);
+        playerPanel.add(lantern_b);
+        playerPanel.add(ouro_b);
+        playerPanel.add(madeira_b);
         playerPanel.add(console);
 
         tilePanel.setBounds(0,0, (int)(0.8*width),height-titleSize);
@@ -218,37 +243,37 @@ public class Game {
         if(board[player.getX()][player.getY()].isWumpus() || player.getHealth() <= 0)
         {
             player.setHealth(0);
-            System.out.println("Voce foi morto");
+            console.setText("Voce foi morto. Fim de Jogo\n");
             over = true;
             return;
         }  else if(player.getX() == 0 && player.getY() == 0 && player.isGold())
         {
-            System.out.println("Voce ganhou");
+            console.setText("Voce ganhou! Parabens.\n");
             over = true;
         }
         if(board[player.getX()][player.getY()].isSmelly())
         {
-            System.out.println("Voce sente o cheiro do wumpus");
+            console.append("Voce sente o cheiro do wumpus\n");
         }
         if(board[player.getX()][player.getY()].isWindy())
         {
-            System.out.println("Voce sente o vento de um abismo");
+            console.append("Voce sente o vento de um abismo\n");
         }
         if(player.getX() == board.length - 1)
         {
-            System.out.println("Parede a direita");
+            console.append("Parede a direita\n");
         }
         if(player.getY() == 0)
         {
-            System.out.println("Parede abaixo.");
+            console.append("Parede abaixo.\n");
         }
         if(player.getY() == board.length - 1)
         {
-            System.out.println("Parede acima.");
+            console.append("Parede acima.\n");
         }
         if(player.getX() == 0)
         {
-            System.out.println("Parede a esquerda.");
+            console.append("Parede a esquerda.\n");
         }
         if(player.getBattery() > 0) System.out.println("0. Use lantern");
         System.out.println("1. Move up");
@@ -257,11 +282,11 @@ public class Game {
         System.out.println("4. Move down");
         if(board[player.getX()][player.getY()].isGold())
         {
-            System.out.println("You can see something shiny...\n5. Pick the gold up");
+            console.append("You can see something shiny...\n5. Pick the gold up");
         }
         if(board[player.getX()][player.getY()].isWood())
         {
-            System.out.println("There`s wood where you stand\n6. Pick the wood up");
+            console.append("There`s wood where you stand\n6. Pick the wood up");
         }
         int choice = sc.nextInt();
         if(choice == 0)
@@ -295,22 +320,22 @@ public class Game {
         {
             board[player.getX()][player.getY()].setGold(false);
             player.setGold(true);
-            System.out.println("Ouro em inventario");
+            console.append("Ouro em inventario");
         }
         else if(choice == 6 && board[player.getX()][player.getY()].isWood())
         {
             player.setWood(player.getWood() + 1);
-            System.out.println("Madeiras em inventario: " + player.getWood());
+            console.append("Madeiras em inventario: " + player.getWood());
         }
         if(board[player.getX()][player.getY()].isWumpus())
         {
             player.setHealth(0);
-            System.out.println("Voce foi morto");
+            console.setText("Voce foi morto. Fim de Jogo.");
             over = true;
             return;
         }  else if(player.getX() == 0 && player.getY() == 0 && player.isGold())
         {
-            System.out.println("Voce ganhou");
+            console.setText("Voce ganhou. Parabens!\n");
             over = true;
         }
 
