@@ -175,11 +175,11 @@ public class Game {
         }
         if(board[player.getX()][player.getY()].isSmelly())
         {
-            System.out.println("You sense the smell of a beast.");
+            System.out.println("Voce sente o cheiro do wumpus");
         }
         if(board[player.getX()][player.getY()].isWindy())
         {
-            System.out.println("There`s a pit nearby.");
+            System.out.println("Voce sente o vento de um abismo");
         }
         if(player.getX() == size - 1)
         {
@@ -242,6 +242,12 @@ public class Game {
         {
             board[player.getX()][player.getY()].setGold(false);
             player.setGold(true);
+            System.out.println("Ouro em inventario");
+        }
+        else if(choice == 6 && board[player.getX()][player.getY()].isWood())
+        {
+            player.setWood(player.getWood() + 1);
+            System.out.println("Madeiras em inventario: " + player.getWood());
         }
         if(board[player.getX()][player.getY()].isWumpus())
         {
