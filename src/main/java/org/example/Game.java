@@ -185,7 +185,7 @@ public class Game implements ActionListener {
         int wumpusDirection = rand.nextInt(4) + 1;
 
         wumpus.clearSmellAndPosition(board);
-        if (wumpusDirection == UP && wumpus.getY() + 1 < board.length && !board[wumpus.getX()][wumpus.getY() - 1].isPit())
+        if (wumpusDirection == UP && wumpus.getY() + 1 < board.length && !board[wumpus.getX()][wumpus.getY() + 1].isPit())
         {
             wumpus.setY(wumpus.getY() + 1);
         } else if (wumpusDirection == RIGHT && wumpus.getX() + 1 < board.length && !board[wumpus.getX() + 1][wumpus.getY()].isPit())
@@ -194,7 +194,7 @@ public class Game implements ActionListener {
         } else if (wumpusDirection == LEFT && wumpus.getX() - 1 >= 0 && !board[wumpus.getX() - 1][wumpus.getY()].isPit())
         {
             wumpus.setX(wumpus.getX() - 1);
-        } else if (wumpusDirection == DOWN && wumpus.getY() - 1 >= 0 && !board[wumpus.getX()][wumpus.getY() + 1].isPit())
+        } else if (wumpusDirection == DOWN && wumpus.getY() - 1 >= 0 && !board[wumpus.getX()][wumpus.getY() - 1].isPit())
         {
             wumpus.setY(wumpus.getY() - 1);
         }
@@ -328,6 +328,8 @@ public class Game implements ActionListener {
                             choice = DOWN;
                         } else if (e.getSource() == gold_b) {
                             choice = GOLD;
+                            gold_b.setVisible(false);
+                            gold_b.setEnabled(false);
                         } else if (e.getSource() == wood_b) {
                             choice = WOOD;
                         }
