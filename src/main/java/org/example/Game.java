@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
-import java.util.Scanner;
 
 import static org.example.Main.*;
 
@@ -28,16 +27,23 @@ public class Game implements ActionListener {
     private JButton right_b;
     private JButton left_b;
     private JButton down_b;
-    private int choice = -1;
     static final int titleSize = 40;
+    private ImageIcon campIcon;
+    private ImageIcon playerIcon;
+    private ImageIcon wumpusIcon;
+
+    private int choice = -1;
+    private ImageIcon monster2Icon;
+    private Random rand;
 
     Game(int width, int height)
     {
         this.width = width;
         this.height = height;
     }
-    public void GenerateBoard(Random rand) {
+    public void GenerateBoard(Random rand){
 
+        this.rand = rand;
         board = new Camp[size][size];
         player = new Player();
         wumpus = new Wumpus();
@@ -91,6 +97,14 @@ public class Game implements ActionListener {
         left_b.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\leftArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width), (int)((height-titleSize)/7), Image.SCALE_DEFAULT)));
         down_b.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\downArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width), (int)((height-titleSize)/7), Image.SCALE_DEFAULT)));
 
+        up_b.addActionListener(this);
+        right_b.addActionListener(this);
+        left_b.addActionListener(this);
+        down_b.addActionListener(this);
+        lantern_b.addActionListener(this);
+        gold_b.addActionListener(this);
+        wood_b.addActionListener(this);
+
         playerPanel.add(up_b);
         playerPanel.add(right_b);
         playerPanel.add(left_b);
@@ -103,18 +117,22 @@ public class Game implements ActionListener {
 
         tilePanel.setBounds(0,0, (int)(0.8*width),height-titleSize);
         playerPanel.setBounds(tilePanel.getWidth(), 0,  width-tilePanel.getWidth(), height-titleSize);
+        playerIcon = new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Player.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
+        campIcon = new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Camp.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
+        wumpusIcon = new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Wumpus.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
+        monster2Icon = new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Monster2.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
 
+        boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("-agentlib:jdwp");
         for(int i = board.length - 1; i >= 0; i--)
         {
             for(int j = 0; j < board.length; j++)
             {
                 campLabels[j][i] = new JLabel();
-                campLabels[j][i].setVisible(false);
-                campLabels[j][i].setIcon(new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Camp.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT)));
+                if(!isDebug) campLabels[j][i].setVisible(false);
+                campLabels[j][i].setIcon(campIcon);
                 tilePanel.add(campLabels[j][i]);
             }
         }
-
         gameFrame.getContentPane().add(tilePanel);
         gameFrame.getContentPane().add(playerPanel);
         gameFrame.getContentPane().revalidate();
@@ -179,89 +197,33 @@ public class Game implements ActionListener {
         board[x][y].setWood(true);
     }
 
-    public void monsterTurn(Random rand)
+    public void monsterTurn()
     {
-        if(over) return;
         //wumpus movement
-        int wumpusDirection = rand.nextInt(4) + 1;
+        wumpus.move(board, rand);
+        monster2.move(board,rand,player);
+        playerTurn();
+    }
 
-        wumpus.clearSmellAndPosition(board);
-        if (wumpusDirection == UP && wumpus.getY() + 1 < board.length && !board[wumpus.getX()][wumpus.getY() + 1].isPit())
-        {
-            wumpus.setY(wumpus.getY() + 1);
-        } else if (wumpusDirection == RIGHT && wumpus.getX() + 1 < board.length && !board[wumpus.getX() + 1][wumpus.getY()].isPit())
-        {
-            wumpus.setX(wumpus.getX() + 1);
-        } else if (wumpusDirection == LEFT && wumpus.getX() - 1 >= 0 && !board[wumpus.getX() - 1][wumpus.getY()].isPit())
-        {
-            wumpus.setX(wumpus.getX() - 1);
-        } else if (wumpusDirection == DOWN && wumpus.getY() - 1 >= 0 && !board[wumpus.getX()][wumpus.getY() - 1].isPit())
-        {
-            wumpus.setY(wumpus.getY() - 1);
-        }
-        wumpus.createSmellAndPosition(board);
-
-        //monster2 movement
-        int monster2Direction1 = rand.nextInt(4) + 1;
-        int monster2Direction2 = rand.nextInt(2);
-        monster2.checkPlayerContact(player); // if player moved to monster
-
-        if(monster2Direction1 == UP && monster2.getY() + 2 < board.length)
-        {
-            monster2.setY(monster2.getY() + 1);
-            monster2.checkPlayerContact(player);
-            monster2.setY(monster2.getY() + 1);
-            monster2.checkPlayerContact(player);
-
-            if(monster2Direction2 == 0 && monster2.getX() - 1 >= 0) //left
-            {
-                monster2.setX(monster2.getX() - 1);
-            }  else{
-                monster2.setX(monster2.getX() + 1);
-            }
-        }  else if (monster2Direction1 == RIGHT && monster2.getX() + 2 < board.length)
-        {
-            monster2.setX(monster2.getX() + 1);
-            monster2.checkPlayerContact(player);
-            monster2.setX(monster2.getX() + 1);
-            monster2.checkPlayerContact(player);
-
-            if(monster2Direction2 == 0 && monster2.getY() - 1 >= 0) //down
-            {
-                monster2.setY(monster2.getY() - 1);
-            }  else {
-                monster2.setY(monster2.getY() + 1);
-            }
-        }  else if (monster2Direction1 == LEFT && monster2.getX() - 2 < board.length)
-        {
-            monster2.setX(monster2.getX() - 1);
-            monster2.checkPlayerContact(player);
-            monster2.setX(monster2.getX() - 1);
-            monster2.checkPlayerContact(player);
-
-            if(monster2Direction2 == 0 && monster2.getY() - 1 >= 0)  //down
-            {
-                monster2.setY(monster2.getY() - 1);
-            }  else{
-                monster2.setY(monster2.getY() + 1);
-            }
-        }  else if (monster2Direction1 == DOWN && monster2.getY() - 2 < board.length)
-        {
-            monster2.setY(monster2.getY() - 1);
-            monster2.checkPlayerContact(player);
-            monster2.setY(monster2.getY() - 1);
-            if(monster2Direction2 == 0 && monster2.getX() - 1 >= 0)  //left
-            {
-                monster2.setX(monster2.getX() - 1);
-            }  else{
-                monster2.setX(monster2.getX() + 1);
-            }
-        }
-        monster2.checkPlayerContact(player); // after second movement
+    public void updateBoard()
+    {
+        //updates player stuff
+        //campLabels[player.getPreviousX()][player.getPreviousY()].setIcon(campIcon);
+        campLabels[player.getX()][player.getY()].setIcon(playerIcon);
+        if(player.getX() + 1 < board.length) campLabels[player.getX() + 1][player.getY()].setIcon(campIcon);
+        if(player.getY() + 1 < board.length) campLabels[player.getX()][player.getY() + 1].setIcon(campIcon);
+        if(player.getX() - 1 >= 0) campLabels[player.getX() - 1][player.getY()].setIcon(campIcon);
+        if(player.getY() - 1 >= 0) campLabels[player.getX()][player.getY() - 1].setIcon(campIcon);
+        //updates Wumpus
+        campLabels[wumpus.getPreviousX()][wumpus.getPreviousY()].setIcon(campIcon);
+        campLabels[wumpus.getX()][wumpus.getY()].setIcon(wumpusIcon);
+        //updates Monster2
+        campLabels[monster2.getPreviousX()][monster2.getPreviousY()].setIcon(campIcon);
+        campLabels[monster2.getX()][monster2.getY()].setIcon(monster2Icon);
     }
 
 
-    public void playerTurn(Scanner sc) {
+    public void playerTurn() {
         choice = -1;
         if (board[player.getX()][player.getY()].isWumpus() || player.getHealth() <= 0) {
             player.setHealth(0);
@@ -273,7 +235,7 @@ public class Game implements ActionListener {
             over = true;
             return;
         }
-
+        this.updateBoard();
         console.setText("");
         console.append("Vida: " + String.valueOf(player.getHealth()) + "\n");
         if (board[player.getX()][player.getY()].isSmelly()) {
