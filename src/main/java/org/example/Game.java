@@ -28,8 +28,7 @@ public class Game implements ActionListener {
     private JButton right_b;
     private JButton left_b;
     private JButton down_b;
-    private int choice;
-
+    private int choice = -1;
     private boolean skip = false;
     static final int titleSize = 40;
 
@@ -39,7 +38,6 @@ public class Game implements ActionListener {
         this.height = height;
     }
     public void GenerateBoard(Random rand) {
-        if(skip) return;
 
         board = new Camp[size][size];
         player = new Player();
@@ -185,6 +183,7 @@ public class Game implements ActionListener {
     public void monsterTurn(Random rand)
     {
         if(over) return;
+        if(skip) return;
 
         //wumpus movement
         int wumpusDirection = rand.nextInt(4) + 1;
@@ -266,6 +265,8 @@ public class Game implements ActionListener {
 
 
     public void playerTurn(Scanner sc) {
+        if(skip) return;
+        choice = -1;
         if (board[player.getX()][player.getY()].isWumpus() || player.getHealth() <= 0) {
             player.setHealth(0);
             console.setText("Voce foi morto. Fim de Jogo\n");
@@ -313,8 +314,6 @@ public class Game implements ActionListener {
             wood_b.setVisible(true);
             wood_b.setEnabled(true);
         }
-        choice = -1;
-
         while (choice < 0) {
 
             ActionListener al = new ActionListener() {
