@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -60,13 +58,10 @@ public class Main {
         Random rand = new Random();
         Game game = new Game(width, height);
         Scanner sc = new Scanner(System.in);
-        game.GenerateBoard(rand);
+        game.setRand(rand);
 
-        while(!game.isOver())
-        {
-            game.playerTurn(sc);
-            game.monsterTurn(rand);
-        }
+        game.GenerateBoard();
+        game.playerTurn();
 
 
     }

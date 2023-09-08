@@ -28,15 +28,17 @@ public class Game implements ActionListener {
     private JButton right_b;
     private JButton left_b;
     private JButton down_b;
-    private int choice = -1;
     static final int titleSize = 40;
+    private ImageIcon campIcon;
+    private ImageIcon playerIcon;
+    private Random rand;
 
     Game(int width, int height)
     {
         this.width = width;
         this.height = height;
     }
-    public void GenerateBoard(Random rand) {
+    public void GenerateBoard(){
 
         board = new Camp[size][size];
         player = new Player();
@@ -91,6 +93,14 @@ public class Game implements ActionListener {
         left_b.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\leftArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width), (int)((height-titleSize)/7), Image.SCALE_DEFAULT)));
         down_b.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\downArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width), (int)((height-titleSize)/7), Image.SCALE_DEFAULT)));
 
+        up_b.addActionListener(this);
+        right_b.addActionListener(this);
+        left_b.addActionListener(this);
+        down_b.addActionListener(this);
+        lantern_b.addActionListener(this);
+        gold_b.addActionListener(this);
+        wood_b.addActionListener(this);
+
         playerPanel.add(up_b);
         playerPanel.add(right_b);
         playerPanel.add(left_b);
@@ -103,14 +113,15 @@ public class Game implements ActionListener {
 
         tilePanel.setBounds(0,0, (int)(0.8*width),height-titleSize);
         playerPanel.setBounds(tilePanel.getWidth(), 0,  width-tilePanel.getWidth(), height-titleSize);
-
+        playerIcon = new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Player.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
+        campIcon = new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Camp.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
         for(int i = board.length - 1; i >= 0; i--)
         {
             for(int j = 0; j < board.length; j++)
             {
                 campLabels[j][i] = new JLabel();
                 campLabels[j][i].setVisible(false);
-                campLabels[j][i].setIcon(new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Camp.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT)));
+                campLabels[j][i].setIcon(campIcon);
                 tilePanel.add(campLabels[j][i]);
             }
         }
@@ -179,9 +190,8 @@ public class Game implements ActionListener {
         board[x][y].setWood(true);
     }
 
-    public void monsterTurn(Random rand)
+    public void monsterTurn()
     {
-        if(over) return;
         //wumpus movement
         int wumpusDirection = rand.nextInt(4) + 1;
 
@@ -258,11 +268,12 @@ public class Game implements ActionListener {
             }
         }
         monster2.checkPlayerContact(player); // after second movement
+        playerTurn();
     }
 
 
-    public void playerTurn(Scanner sc) {
-        choice = -1;
+    public void playerTurn() {
+
         if (board[player.getX()][player.getY()].isWumpus() || player.getHealth() <= 0) {
             player.setHealth(0);
             console.setText("Voce foi morto. Fim de Jogo\n");
@@ -274,8 +285,16 @@ public class Game implements ActionListener {
             return;
         }
 
+        campLabels[player.getX()][player.getY()].setIcon(playerIcon);
+
+        if(player.getY() + 1 < board.length) campLabels[player.getX()][player.getY()+1].setIcon(campIcon);
+        if(player.getX() + 1 < board.length) campLabels[player.getX()+1][player.getY()].setIcon(campIcon);
+        if(player.getX() - 1 >= 0) campLabels[player.getX()-1][player.getY()].setIcon(campIcon);
+        if(player.getY() - 1 >= 0) campLabels[player.getX()][player.getY()-1].setIcon(campIcon);
+
         console.setText("");
         console.append("Vida: " + String.valueOf(player.getHealth()) + "\n");
+        if(player.getWood() > 0) console.append("Madeiras em inventario: " + player.getWood());
         if (board[player.getX()][player.getY()].isSmelly()) {
             console.append("Voce sente o cheiro do wumpus\n");
         }
@@ -310,79 +329,25 @@ public class Game implements ActionListener {
             wood_b.setVisible(true);
             wood_b.setEnabled(true);
         }
-        while (choice < 0) {
 
-            ActionListener al = new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    while(choice < 0) {
-                        if (e.getSource() == lantern_b) {
-                            choice = LANTERN;
-                            console.setText("Escolha a direcao");
-                        } else if (e.getSource() == up_b) {
-                            choice = UP;
-                        } else if (e.getSource() == right_b) {
-                            choice = RIGHT;
-                        } else if (e.getSource() == left_b) {
-                            choice = LEFT;
-                        } else if (e.getSource() == down_b) {
-                            choice = DOWN;
-                        } else if (e.getSource() == gold_b) {
-                            choice = GOLD;
-                            gold_b.setVisible(false);
-                            gold_b.setEnabled(false);
-                        } else if (e.getSource() == wood_b) {
-                            choice = WOOD;
-                        }
-                    }
-                }
-            };
-            up_b.addActionListener(al);
-            right_b.addActionListener(al);
-            left_b.addActionListener(al);
-            down_b.addActionListener(al);
-            lantern_b.addActionListener(al);
-            gold_b.addActionListener(al);
-            wood_b.addActionListener(al);
-
-            if (choice == UP) {
-                player.moveUp(board);
-            } else if (choice == RIGHT) {
-                player.moveRight(board);
-            } else if (choice == LEFT) {
-                player.moveLeft(board);
-            } else if (choice == DOWN) {
-                player.moveDown(board);
-            } else if (choice == GOLD && board[player.getX()][player.getY()].isGold()) {
-                board[player.getX()][player.getY()].setGold(false);
-                player.setGold(true);
-                console.append("Ouro em inventario");
-            } else if (choice == WOOD && board[player.getX()][player.getY()].isWood()) {
-                board[player.getX()][player.getY()].setWood(false);
-                player.setWood(player.getWood() + 1);
-                console.append("Madeiras em inventario: " + player.getWood());
-            }
-            if(!board[player.getX()][player.getY()].isGold())
-            {
-                gold_b.setVisible(false);
-                gold_b.setEnabled(false);
-            }
-            if(!board[player.getX()][player.getY()].isWood())
-            {
-                wood_b.setVisible(false);
-                wood_b.setEnabled(false);
-            }
-            campLabels[player.getX()][player.getY()].setVisible(true);
-            if (board[player.getX()][player.getY()].isWumpus()) {
-                player.setHealth(0);
-                console.setText("Voce foi morto. Fim de Jogo.");
-                over = true;
-                return;
-            } else if (player.getX() == 0 && player.getY() == 0 && player.isGold()) {
-                console.setText("Voce ganhou. Parabens!\n");
-                over = true;
-                return;
-            }
+        if(!board[player.getX()][player.getY()].isGold())
+        {
+            gold_b.setVisible(false);
+            gold_b.setEnabled(false);
+        }
+        if(!board[player.getX()][player.getY()].isWood())
+        {
+            wood_b.setVisible(false);
+            wood_b.setEnabled(false);
+        }
+        campLabels[player.getX()][player.getY()].setVisible(true);
+        if (board[player.getX()][player.getY()].isWumpus()) {
+            player.setHealth(0);
+            console.setText("Voce foi morto. Fim de Jogo.");
+            over = true;
+        } else if (player.getX() == 0 && player.getY() == 0 && player.isGold()) {
+            console.setText("Voce ganhou. Parabens!\n");
+            over = true;
         }
     }
 
@@ -400,6 +365,35 @@ public class Game implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == lantern_b) {
+            //choice = LANTERN;
+            console.setText("Escolha a direcao");
+        } else if (e.getSource() == up_b) {
+            player.moveUp(board);
+        } else if (e.getSource() == right_b) {
+            player.moveRight(board);
+        } else if (e.getSource() == left_b) {
+            player.moveLeft(board);
+        } else if (e.getSource() == down_b) {
+            player.moveDown(board);
+        } else if (e.getSource() == gold_b) {
+            board[player.getX()][player.getY()].setGold(false);
+            player.setGold(true);
+            console.append("Ouro em inventario.\n");
+            gold_b.setVisible(false);
+            gold_b.setEnabled(false);
+        } else if (e.getSource() == wood_b) {
+            board[player.getX()][player.getY()].setWood(false);
+            player.setWood(player.getWood() + 1);
+            console.append("Madeiras em inventario: " + player.getWood());
+            wood_b.setVisible(false);
+            wood_b.setEnabled(false);
+        }
+        monsterTurn();
+    }
 
+    public void setRand(Random rand) {
+        this.rand = rand;
     }
 }
+
