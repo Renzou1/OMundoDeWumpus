@@ -20,77 +20,78 @@ public class Monster2 {
         }
     }
 
-    public void move(Camp[][] board, Random rand, Player player)
-    {
+    public void move(Camp[][] board, Random rand, Player player) {
         //monster2 movement
-        int monster2Direction1 = rand.nextInt(4) + 1;
-        int monster2Direction2 = rand.nextInt(2);
+        int monster2Direction1;
+        int monster2Direction2;
         checkPlayerContact(player); // if player moved to monster
 
         previousX = x;
         previousY = y;
 
-        if(monster2Direction1 == UP && y + 2 < board.length - 1)
+        while(previousX == x && previousY == y)
         {
-            y++;
-            checkPlayerContact(player);
-            y++;
-            checkPlayerContact(player);
+            monster2Direction1 = rand.nextInt(4) + 1;
+            monster2Direction2 = rand.nextInt(2);
 
-            if(x + 1 >= board.length)  //left
-            {
-                x--;
-            }  else if (x - 1 <= 0){
-                x++;
-            }  else {
-                if(monster2Direction2 == 0) x--;
-                else x++;
-            }
-        }  else if (monster2Direction1 == RIGHT && x + 2 < board.length - 1)
-        {
-            x++;
-            checkPlayerContact(player);
-            x++;
-            checkPlayerContact(player);
-
-            if(y + 1 >= board.length)  //down
-            {
-                y--;
-            }  else if (y - 1 <= 0){
+            if (monster2Direction1 == UP && y + 2 < board.length - 1) {
                 y++;
-            }  else{
-                if(monster2Direction2 == 0) y--;
-                else y++;
-            }
-        }  else if (monster2Direction1 == LEFT && x - 2 >= 0)
-        {
-            x--;
-            checkPlayerContact(player);
-            x--;
-            checkPlayerContact(player);
-
-            if(y + 1 >= board.length)  //down
-            {
-                y--;
-            }  else if (y - 1 <= 0){
+                checkPlayerContact(player);
                 y++;
-            }  else{
-                if(monster2Direction2 == 0) y--;
-                else y++;
-            }
-        }  else if (monster2Direction1 == DOWN && y - 2 >= 0)
-        {
-            y--;
-            checkPlayerContact(player);
-            y--;
-            if(x + 1 >= board.length)  //left
-            {
-                x--;
-            }  else if (x - 1 <= 0){
+                checkPlayerContact(player);
+
+                if (x + 1 >= board.length)  //left
+                {
+                    x--;
+                } else if (x - 1 <= 0) {
+                    x++;
+                } else {
+                    if (monster2Direction2 == 0) x--;
+                    else x++;
+                }
+            } else if (monster2Direction1 == RIGHT && x + 2 < board.length - 1) {
                 x++;
-            }  else {
-                if(monster2Direction2 == 0) x--;
-                else x++;
+                checkPlayerContact(player);
+                x++;
+                checkPlayerContact(player);
+
+                if (y + 1 >= board.length)  //down
+                {
+                    y--;
+                } else if (y - 1 <= 0) {
+                    y++;
+                } else {
+                    if (monster2Direction2 == 0) y--;
+                    else y++;
+                }
+            } else if (monster2Direction1 == LEFT && x - 2 >= 0) {
+                x--;
+                checkPlayerContact(player);
+                x--;
+                checkPlayerContact(player);
+
+                if (y + 1 >= board.length)  //down
+                {
+                    y--;
+                } else if (y - 1 <= 0) {
+                    y++;
+                } else {
+                    if (monster2Direction2 == 0) y--;
+                    else y++;
+                }
+            } else if (monster2Direction1 == DOWN && y - 2 >= 0) {
+                y--;
+                checkPlayerContact(player);
+                y--;
+                if (x + 1 >= board.length)  //left
+                {
+                    x--;
+                } else if (x - 1 <= 0) {
+                    x++;
+                } else {
+                    if (monster2Direction2 == 0) x--;
+                    else x++;
+                }
             }
         }
         checkPlayerContact(player); // after second movement

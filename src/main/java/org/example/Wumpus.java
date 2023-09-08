@@ -37,18 +37,16 @@ public class Wumpus {
         previousY = y;
 
         clearSmellAndPosition(board);
-        if (wumpusDirection == UP && y + 1 < board.length - 1 && !board[x][y + 1].isPit())
-        {
-            y++;
-        } else if (wumpusDirection == RIGHT && x + 1 < board.length - 1 && !board[x + 1][y].isPit())
-        {
-            x++;
-        } else if (wumpusDirection == LEFT && x - 1 >= 0 && !board[x - 1][y].isPit())
-        {
-            x--;
-        } else if (wumpusDirection == DOWN && y - 1 >= 0 && !board[x][y - 1].isPit())
-        {
-            y--;
+        while(previousX == x && previousY == y) {
+            if (wumpusDirection == UP && y + 1 < board.length - 1 && !board[x][y + 1].isPit()) {
+                y++;
+            } else if (wumpusDirection == RIGHT && x + 1 < board.length - 1 && !board[x + 1][y].isPit()) {
+                x++;
+            } else if (wumpusDirection == LEFT && x - 1 >= 0 && !board[x - 1][y].isPit()) {
+                x--;
+            } else if (wumpusDirection == DOWN && y - 1 >= 0 && !board[x][y - 1].isPit()) {
+                y--;
+            }
         }
         createSmellAndPosition(board);
     }
