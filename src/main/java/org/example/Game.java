@@ -31,8 +31,8 @@ public class Game implements ActionListener {
     private ImageIcon campIcon;
     private ImageIcon playerIcon;
     private ImageIcon wumpusIcon;
-
     private ImageIcon monster2Icon;
+    private ImageIcon[] hiddenIcon;
     private Random rand;
 
     Game(int width, int height)
@@ -62,7 +62,6 @@ public class Game implements ActionListener {
         JPanel playerPanel = new JPanel();
         playerPanel.setVisible(true);
         playerPanel.setLayout(new GridLayout(0,1));
-
 
         up_b = new JButton();
         up_b.setVisible(true);
@@ -112,15 +111,22 @@ public class Game implements ActionListener {
         campIcon = new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Camp.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
         wumpusIcon = new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Wumpus.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
         monster2Icon = new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Monster2.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
+        hiddenIcon = new ImageIcon[4];
+        hiddenIcon[0] = new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Hidden1.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
+        hiddenIcon[1] = new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Hidden2.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
+        hiddenIcon[2] = new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Hidden3.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
+        hiddenIcon[3] = new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Hidden4.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
 
         boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("-agentlib:jdwp");
+        int hiddenType;
         for(int i = board.length - 1; i >= 0; i--)
         {
             for(int j = 0; j < board.length; j++)
             {
+                hiddenType = rand.nextInt(4);
                 campLabels[j][i] = new JLabel();
-                if(!isDebug) campLabels[j][i].setVisible(false);
-                campLabels[j][i].setIcon(campIcon);
+                campLabels[j][i].setIcon(hiddenIcon[hiddenType]);
+                campLabels[j][i].setVisible(true);
                 tilePanel.add(campLabels[j][i]);
             }
         }
@@ -205,13 +211,14 @@ public class Game implements ActionListener {
 
         //updates Wumpus
         if(!board[monster2.getPreviousX()][monster2.getPreviousY()].isPlayer())
-        campLabels[wumpus.getPreviousX()][wumpus.getPreviousY()].setIcon(campIcon);
-        campLabels[wumpus.getX()][wumpus.getY()].setIcon(wumpusIcon);
+        if(!board[wumpus.getPreviousX()][wumpus.getPreviousY()].isHidden()) campLabels[wumpus.getPreviousX()][wumpus.getPreviousY()].setIcon(campIcon);
+        if(!board[wumpus.getX()][wumpus.getY()].isHidden()) campLabels[wumpus.getX()][wumpus.getY()].setIcon(wumpusIcon);
 
         //updates Monster2
         if(!board[monster2.getPreviousX()][monster2.getPreviousY()].isPlayer() && !board[monster2.getPreviousX()][monster2.getPreviousY()].isWumpus())
-        campLabels[monster2.getPreviousX()][monster2.getPreviousY()].setIcon(campIcon);
-        campLabels[monster2.getX()][monster2.getY()].setIcon(monster2Icon);
+        if(!board[monster2.getPreviousX()][monster2.getPreviousY()].isHidden())campLabels[monster2.getPreviousX()][monster2.getPreviousY()].setIcon(campIcon);
+        if(!board[monster2.getX()][monster2.getY()].isHidden()) campLabels[monster2.getX()][monster2.getY()].setIcon(monster2Icon);
+
     }
 
     public void playerTurn() {

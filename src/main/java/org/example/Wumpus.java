@@ -32,12 +32,14 @@ public class Wumpus {
 
     public void move(Camp[][] board, Random rand)
     {
-        int wumpusDirection = rand.nextInt(4) + 1;
+        int wumpusDirection;
         previousX = x;
         previousY = y;
 
         clearSmellAndPosition(board);
         while(previousX == x && previousY == y) {
+            wumpusDirection = rand.nextInt(4) + 1;
+
             if (wumpusDirection == UP && y + 1 < board.length - 1 && !board[x][y + 1].isPit()) {
                 y++;
             } else if (wumpusDirection == RIGHT && x + 1 < board.length - 1 && !board[x + 1][y].isPit()) {
