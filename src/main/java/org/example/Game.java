@@ -17,8 +17,7 @@ public class Game implements ActionListener {
     private Monster2 monster2;
     private JFrame gameFrame;
     private JLabel[][] campLabels;
-    private int size = 15;
-    private boolean over = false;
+    private int size;
     private JTextArea console;
     private JButton lantern_b;
     private JButton gold_b;
@@ -35,10 +34,11 @@ public class Game implements ActionListener {
     private ImageIcon[] hiddenIcon;
     private Random rand;
 
-    Game(int width, int height)
+    Game(int width, int height, int size)
     {
         this.width = width;
         this.height = height;
+        this.size = size;
     }
     public void GenerateBoard(){
 
@@ -148,8 +148,8 @@ public class Game implements ActionListener {
 
         //creates Pit
         do {
-            x = rand.nextInt(15);
-            y = rand.nextInt(15);
+            x = rand.nextInt(board.length);
+            y = rand.nextInt(board.length);
         } while (x == 0 && y == 0);
 
         board[x][y].setPit(true);
@@ -160,8 +160,8 @@ public class Game implements ActionListener {
 
         //creates Wumpus
         do {
-            x = rand.nextInt(15);
-            y = rand.nextInt(15);
+            x = rand.nextInt(board.length);
+            y = rand.nextInt(board.length);
         } while (x == 0 && y == 0  && !board[x][y].isPit());
 
         board[x][y].setWumpus(true);
@@ -171,8 +171,8 @@ public class Game implements ActionListener {
 
         //creates Monster2
         do {
-            x = rand.nextInt(15);
-            y = rand.nextInt(15);
+            x = rand.nextInt(board.length);
+            y = rand.nextInt(board.length);
         } while (x == 0 && y == 0  && !board[x][y].isPit());
 
         board[x][y].setMonster2(true);
@@ -180,15 +180,15 @@ public class Game implements ActionListener {
         monster2.setY(y);
 
         do {
-            x = rand.nextInt(15);
-            y = rand.nextInt(15);
+            x = rand.nextInt(board.length);
+            y = rand.nextInt(board.length);
         } while (x == 0 && y == 0  && !board[x][y].isPit());
 
         board[x][y].setGold(true);
 
         do {
-            x = rand.nextInt(15);
-            y = rand.nextInt(15);
+            x = rand.nextInt(board.length);
+            y = rand.nextInt(board.length);
         } while (x == 0 && y == 0  && !board[x][y].isPit());
 
         board[x][y].setWood(true);
@@ -210,14 +210,22 @@ public class Game implements ActionListener {
         campLabels[player.getX()][player.getY()].setIcon(playerIcon);
 
         //updates Wumpus
-        if(!board[monster2.getPreviousX()][monster2.getPreviousY()].isPlayer())
-        if(!board[wumpus.getPreviousX()][wumpus.getPreviousY()].isHidden()) campLabels[wumpus.getPreviousX()][wumpus.getPreviousY()].setIcon(campIcon);
-        if(!board[wumpus.getX()][wumpus.getY()].isHidden()) campLabels[wumpus.getX()][wumpus.getY()].setIcon(wumpusIcon);
+        int previousX = wumpus.getPreviousX();
+        int previousY = wumpus.getPreviousY();
+        int x = wumpus.getX();
+        int y = wumpus.getY();
+        if(!board[previousX][previousY].isPlayer())
+        if(!board[previousX][previousY].isHidden()) campLabels[previousX][previousY].setIcon(campIcon);
+        if(!board[x][y].isHidden()) campLabels[x][y].setIcon(wumpusIcon);
 
         //updates Monster2
-        if(!board[monster2.getPreviousX()][monster2.getPreviousY()].isPlayer() && !board[monster2.getPreviousX()][monster2.getPreviousY()].isWumpus())
-        if(!board[monster2.getPreviousX()][monster2.getPreviousY()].isHidden())campLabels[monster2.getPreviousX()][monster2.getPreviousY()].setIcon(campIcon);
-        if(!board[monster2.getX()][monster2.getY()].isHidden()) campLabels[monster2.getX()][monster2.getY()].setIcon(monster2Icon);
+        previousX = monster2.getPreviousX();
+        previousY = monster2.getPreviousY();
+        x = monster2.getX();
+        y = monster2.getY();
+        if(!board[previousX][previousY].isPlayer() && !board[previousX][previousY].isWumpus())
+        if(!board[previousX][previousY].isHidden())campLabels[previousX][previousY].setIcon(campIcon);
+        if(!board[x][y].isHidden()) campLabels[x][y].setIcon(monster2Icon);
 
     }
 
@@ -226,11 +234,9 @@ public class Game implements ActionListener {
         if (board[player.getX()][player.getY()].isWumpus() || player.getHealth() <= 0) {
             player.setHealth(0);
             console.setText("Voce foi morto. Fim de Jogo\n");
-            over = true;
             return;
         } else if (player.getX() == 0 && player.getY() == 0 && player.isGold()) {
             console.setText("Voce ganhou! Parabens.\n");
-            over = true;
             return;
         }
 
@@ -267,7 +273,7 @@ public class Game implements ActionListener {
             gold_b.setEnabled(true);
         }
         if (board[player.getX()][player.getY()].isWood()) {
-            console.append("Voce sente uma madeira aos seus pes\n");
+            console.append("Voce pisa em uma madeira\n");
             wood_b.setVisible(true);
             wood_b.setEnabled(true);
         }
@@ -286,10 +292,8 @@ public class Game implements ActionListener {
         if (board[player.getX()][player.getY()].isWumpus()) {
             player.setHealth(0);
             console.setText("Voce foi morto. Fim de Jogo.");
-            over = true;
         } else if (player.getX() == 0 && player.getY() == 0 && player.isGold()) {
             console.setText("Voce ganhou. Parabens!\n");
-            over = true;
         }
     }
 
