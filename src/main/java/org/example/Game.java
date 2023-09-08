@@ -130,6 +130,8 @@ public class Game implements ActionListener {
                 tilePanel.add(campLabels[j][i]);
             }
         }
+
+
         gameFrame.getContentPane().add(tilePanel);
         gameFrame.getContentPane().add(playerPanel);
         gameFrame.getContentPane().revalidate();
@@ -142,6 +144,10 @@ public class Game implements ActionListener {
         }
         board[0][0].setPlayer(true);
         board[0][0].setHidden(false);
+        if(isDebug)
+            for(int i = 0; i < board.length; i++)
+                for(int j = 0; j < board.length; j++)
+                    board[i][j].setHidden(false);
 
         int x;
         int y;
