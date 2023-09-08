@@ -66,27 +66,20 @@ public class Game implements ActionListener {
 
         up_b = new JButton();
         up_b.setVisible(true);
-        up_b.addActionListener(this);
         right_b = new JButton();
         right_b.setVisible(true);
-        right_b.addActionListener(this);
         left_b = new JButton();
         left_b.setVisible(true);
-        left_b.addActionListener(this);
         down_b = new JButton();
         down_b.setVisible(true);
-        down_b.addActionListener(this);
         lantern_b = new JButton("Usar lanterna");
         lantern_b.setVisible(true);
-        lantern_b.addActionListener(this);
         gold_b = new JButton("Pegar ouro");
         gold_b.setEnabled(false);
         gold_b.setVisible(false);
-        gold_b.addActionListener(this);
         wood_b = new JButton("Pegar madeira");
         wood_b.setEnabled(false);
         wood_b.setVisible(false);
-        wood_b.addActionListener(this);
 
         console = new JTextArea();
         console.setVisible(true);
