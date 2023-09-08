@@ -130,6 +130,8 @@ public class Game implements ActionListener {
                 tilePanel.add(campLabels[j][i]);
             }
         }
+
+
         gameFrame.getContentPane().add(tilePanel);
         gameFrame.getContentPane().add(playerPanel);
         gameFrame.getContentPane().revalidate();
@@ -142,6 +144,10 @@ public class Game implements ActionListener {
         }
         board[0][0].setPlayer(true);
         board[0][0].setHidden(false);
+        if(isDebug)
+            for(int i = 0; i < board.length; i++)
+                for(int j = 0; j < board.length; j++)
+                    board[i][j].setHidden(false);
 
         int x;
         int y;
@@ -229,6 +235,15 @@ public class Game implements ActionListener {
 
     }
 
+    public void updateHidden()
+    {
+        for(int i = 0; i < board.length; i++)
+            for(int j = 0; j < board.length; j++)
+                if(!board[i][j].isHidden()){
+                    campLabels[i][j].setIcon(campIcon);
+                }
+        updateBoard();
+    }
     public void playerTurn() {
 
         if (board[player.getX()][player.getY()].isWumpus() || player.getHealth() <= 0) {
@@ -300,8 +315,15 @@ public class Game implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == lantern_b) {
-            //choice = LANTERN;
             console.setText("Escolha a direcao");
+            player.setBattery(player.getBattery() - 1);
+            player.useLantern(board, UP);
+            updateHidden();
+            if(player.getBattery() == 0)
+            {
+                lantern_b.setVisible(false);
+                lantern_b.setEnabled(false);
+            }
         } else if (e.getSource() == up_b) {
             player.moveUp(board);
         } else if (e.getSource() == right_b) {
