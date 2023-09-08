@@ -29,7 +29,6 @@ public class Game implements ActionListener {
     private JButton left_b;
     private JButton down_b;
     private int choice = -1;
-    private boolean skip = false;
     static final int titleSize = 40;
 
     Game(int width, int height)
@@ -183,8 +182,6 @@ public class Game implements ActionListener {
     public void monsterTurn(Random rand)
     {
         if(over) return;
-        if(skip) return;
-
         //wumpus movement
         int wumpusDirection = rand.nextInt(4) + 1;
 
@@ -265,7 +262,6 @@ public class Game implements ActionListener {
 
 
     public void playerTurn(Scanner sc) {
-        if(skip) return;
         choice = -1;
         if (board[player.getX()][player.getY()].isWumpus() || player.getHealth() <= 0) {
             player.setHealth(0);
@@ -305,12 +301,12 @@ public class Game implements ActionListener {
             lantern_b.setEnabled(false);
         }
         if (board[player.getX()][player.getY()].isGold()) {
-            console.append("You can see something shiny...\n");
+            console.append("Voce consegue ver algo brilhante...\n");
             gold_b.setVisible(true);
             gold_b.setEnabled(true);
         }
         if (board[player.getX()][player.getY()].isWood()) {
-            console.append("There`s wood where you stand\n");
+            console.append("Voce sente uma madeira aos seus pes\n");
             wood_b.setVisible(true);
             wood_b.setEnabled(true);
         }
@@ -323,13 +319,8 @@ public class Game implements ActionListener {
                         if (e.getSource() == lantern_b) {
                             choice = LANTERN;
                             console.setText("Escolha a direcao");
-                            skip = true;
                         } else if (e.getSource() == up_b) {
-                            if(!skip) choice = UP;
-                            else {
-                                player.useLantern(board, UP);
-                                skip = false;
-                            }
+                            choice = UP;
                         } else if (e.getSource() == right_b) {
                             choice = RIGHT;
                         } else if (e.getSource() == left_b) {
@@ -367,6 +358,7 @@ public class Game implements ActionListener {
                 player.setGold(true);
                 console.append("Ouro em inventario");
             } else if (choice == WOOD && board[player.getX()][player.getY()].isWood()) {
+                board[player.getX()][player.getY()].setWood(false);
                 player.setWood(player.getWood() + 1);
                 console.append("Madeiras em inventario: " + player.getWood());
             }
