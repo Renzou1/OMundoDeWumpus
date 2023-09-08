@@ -17,6 +17,7 @@ public class Game implements ActionListener {
     private Wumpus wumpus;
     private Monster2 monster2;
     private JFrame gameFrame;
+    private JLabel[][] campLabels;
     private int size = 15;
     private boolean over = false;
     private JTextArea console;
@@ -28,6 +29,8 @@ public class Game implements ActionListener {
     private JButton left_b;
     private JButton down_b;
     private int choice;
+
+    private boolean skip = false;
     static final int titleSize = 40;
 
     Game(int width, int height)
@@ -36,6 +39,8 @@ public class Game implements ActionListener {
         this.height = height;
     }
     public void GenerateBoard(Random rand) {
+        if(skip) return;
+
         board = new Camp[size][size];
         player = new Player();
         wumpus = new Wumpus();
@@ -49,7 +54,7 @@ public class Game implements ActionListener {
         gameFrame.getContentPane().setLayout(null);
         gameFrame.setResizable(false);
         GridBagConstraints c = new GridBagConstraints();
-        JLabel[][] campLabels = new JLabel[board.length][board.length];
+        campLabels = new JLabel[board.length][board.length];
         JPanel tilePanel = new JPanel();
         tilePanel.setLayout(new GridLayout(board.length, board.length));
         tilePanel.setVisible(true);
@@ -102,14 +107,14 @@ public class Game implements ActionListener {
         tilePanel.setBounds(0,0, (int)(0.8*width),height-titleSize);
         playerPanel.setBounds(tilePanel.getWidth(), 0,  width-tilePanel.getWidth(), height-titleSize);
 
-        for(int i = 0; i < board.length; i++)
+        for(int i = board.length - 1; i >= 0; i--)
         {
             for(int j = 0; j < board.length; j++)
             {
-                campLabels[i][j] = new JLabel();
-                campLabels[i][j].setVisible(true);
-                campLabels[i][j].setIcon(new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Camp.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT)));
-                tilePanel.add(campLabels[i][j]);
+                campLabels[j][i] = new JLabel();
+                campLabels[j][i].setVisible(false);
+                campLabels[j][i].setIcon(new ImageIcon(new ImageIcon("C:\\Users\\renzo\\IdeaProjects\\OMundoDeWumpus\\resources\\Camp.png").getImage().getScaledInstance((int)(tilePanel.getWidth()/board.length), (int)(tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT)));
+                tilePanel.add(campLabels[j][i]);
             }
         }
 
@@ -310,16 +315,22 @@ public class Game implements ActionListener {
         }
         choice = -1;
 
-        while (choice <= 0) {
+        while (choice < 0) {
 
             ActionListener al = new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    while(choice <= 0) {
+                    while(choice < 0) {
                         if (e.getSource() == lantern_b) {
                             choice = LANTERN;
+                            console.setText("Escolha a direcao");
+                            skip = true;
                         } else if (e.getSource() == up_b) {
-                            choice = UP;
+                            if(!skip) choice = UP;
+                            else {
+                                player.useLantern(board, UP);
+                                skip = false;
+                            }
                         } else if (e.getSource() == right_b) {
                             choice = RIGHT;
                         } else if (e.getSource() == left_b) {
@@ -344,11 +355,6 @@ public class Game implements ActionListener {
             gold_b.addActionListener(al);
             wood_b.addActionListener(al);
 
-            if(choice == LANTERN) {
-                console.setText("Escolha a direcao");
-                while(choice == LANTERN || choice > DOWN){}
-                player.useLantern(board, choice);
-            }
             if (choice == UP) {
                 player.moveUp(board);
             } else if (choice == RIGHT) {
@@ -365,6 +371,17 @@ public class Game implements ActionListener {
                 player.setWood(player.getWood() + 1);
                 console.append("Madeiras em inventario: " + player.getWood());
             }
+            if(!board[player.getX()][player.getY()].isGold())
+            {
+                gold_b.setVisible(false);
+                gold_b.setEnabled(false);
+            }
+            if(!board[player.getX()][player.getY()].isWood())
+            {
+                wood_b.setVisible(false);
+                wood_b.setEnabled(false);
+            }
+            campLabels[player.getX()][player.getY()].setVisible(true);
             if (board[player.getX()][player.getY()].isWumpus()) {
                 player.setHealth(0);
                 console.setText("Voce foi morto. Fim de Jogo.");
