@@ -131,7 +131,6 @@ public class Game implements ActionListener {
                 tilePanel.add(campLabels[j][i]);
             }
         }
-
         gameFrame.getContentPane().add(tilePanel);
         gameFrame.getContentPane().add(playerPanel);
         gameFrame.getContentPane().revalidate();
@@ -207,14 +206,14 @@ public class Game implements ActionListener {
     public void updateBoard()
     {
         //updates player stuff
-        campLabels[player.getX()][player.getY()].setIcon(playerIcon);
         campLabels[player.getPreviousX()][player.getPreviousY()].setIcon(campIcon);
+        campLabels[player.getX()][player.getY()].setIcon(playerIcon);
         //updates Wumpus
-        campLabels[wumpus.getX()][wumpus.getY()].setIcon(wumpusIcon);
         campLabels[wumpus.getPreviousX()][wumpus.getPreviousY()].setIcon(campIcon);
+        campLabels[wumpus.getX()][wumpus.getY()].setIcon(wumpusIcon);
         //updates Monster2
-        campLabels[monster2.getX()][monster2.getY()].setIcon(monster2Icon);
         campLabels[monster2.getPreviousX()][monster2.getPreviousY()].setIcon(campIcon);
+        campLabels[monster2.getX()][monster2.getY()].setIcon(monster2Icon);
     }
 
     public void playerTurn() {
@@ -290,18 +289,6 @@ public class Game implements ActionListener {
             console.setText("Voce ganhou. Parabens!\n");
             over = true;
         }
-    }
-
-    public boolean isOver() {
-        return over;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
     }
 
     @Override
