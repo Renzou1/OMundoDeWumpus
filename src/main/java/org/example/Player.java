@@ -4,7 +4,10 @@ import static org.example.Main.*;
 
 public class Player {
     private int x = 0;
+
+    private int previousX = 0;
     private int y = 0;
+    private int previousY = 0;
     private int health = 100;
     private int wood = 0;
     private int battery = 2;
@@ -12,6 +15,7 @@ public class Player {
 
     public void moveUp(Camp[][] board)
     {
+        previousY = y;
         if( y + 1 < board.length)
         {
             board[x][y].setPlayer(false);
@@ -26,6 +30,7 @@ public class Player {
 
     public void moveRight(Camp[][] board)
     {
+        previousX = x;
         if(x + 1 < board.length) {
             board[x][y].setPlayer(false);
             x++;
@@ -39,6 +44,7 @@ public class Player {
 
     public void moveLeft(Camp[][] board)
     {
+        previousX = x;
         if(x - 1 >= 0) {
             board[x][y].setPlayer(false);
             x--;
@@ -52,6 +58,7 @@ public class Player {
 
     public void moveDown(Camp[][] board)
     {
+        previousY = y;
         if(y - 1 >= 0)
         {
             board[x][y].setPlayer(false);
@@ -140,5 +147,13 @@ public class Player {
 
     public void setWood(int wood) {
         this.wood = wood;
+    }
+
+    public int getPreviousX() {
+        return previousX;
+    }
+
+    public int getPreviousY() {
+        return previousY;
     }
 }
