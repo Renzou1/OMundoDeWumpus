@@ -14,7 +14,6 @@ public class Main {
     static final int DOWN = 4;
     private static int width;
     private static int height;
-
     private static int size;
     private static boolean clear;
     public static void main(String[] args) {

@@ -32,6 +32,7 @@ public class Game implements ActionListener {
     private ImageIcon wumpusIcon;
     private ImageIcon monster2Icon;
     private ImageIcon[] hiddenIcon;
+    private boolean lantern = false;
     private Random rand;
 
     Game(int width, int height, int size)
@@ -314,38 +315,55 @@ public class Game implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == lantern_b) {
-            console.setText("Escolha a direcao");
-            player.setBattery(player.getBattery() - 1);
+        if(!lantern) {
+            if (e.getSource() == lantern_b) {
+                console.setText("Escolha a direcao");
+                player.setBattery(player.getBattery() - 1);
+                lantern = true;
+                if (player.getBattery() == 0) {
+                    lantern_b.setVisible(false);
+                    lantern_b.setEnabled(false);
+                }
+            } else if (e.getSource() == up_b) {
+                player.moveUp(board);
+            } else if (e.getSource() == right_b) {
+                player.moveRight(board);
+            } else if (e.getSource() == left_b) {
+                player.moveLeft(board);
+            } else if (e.getSource() == down_b) {
+                player.moveDown(board);
+            }  else if (e.getSource() == gold_b) {
+                board[player.getX()][player.getY()].setGold(false);
+                player.setGold(true);
+                console.append("Ouro em inventario.\n");
+                gold_b.setVisible(false);
+                gold_b.setEnabled(false);
+            } else if (e.getSource() == wood_b) {
+                board[player.getX()][player.getY()].setWood(false);
+                player.setWood(player.getWood() + 1);
+                console.append("Madeiras em inventario: " + player.getWood());
+                wood_b.setVisible(false);
+                wood_b.setEnabled(false);
+            }
+            monsterTurn();
+
+        } else if (e.getSource() == up_b) {
             player.useLantern(board, UP);
             updateHidden();
-            if(player.getBattery() == 0)
-            {
-                lantern_b.setVisible(false);
-                lantern_b.setEnabled(false);
-            }
-        } else if (e.getSource() == up_b) {
-            player.moveUp(board);
+            lantern = false;
         } else if (e.getSource() == right_b) {
-            player.moveRight(board);
+            player.useLantern(board, RIGHT);
+            updateHidden();
+            lantern = false;
         } else if (e.getSource() == left_b) {
-            player.moveLeft(board);
+            player.useLantern(board, LEFT);
+            updateHidden();
+            lantern = false;
         } else if (e.getSource() == down_b) {
-            player.moveDown(board);
-        } else if (e.getSource() == gold_b) {
-            board[player.getX()][player.getY()].setGold(false);
-            player.setGold(true);
-            console.append("Ouro em inventario.\n");
-            gold_b.setVisible(false);
-            gold_b.setEnabled(false);
-        } else if (e.getSource() == wood_b) {
-            board[player.getX()][player.getY()].setWood(false);
-            player.setWood(player.getWood() + 1);
-            console.append("Madeiras em inventario: " + player.getWood());
-            wood_b.setVisible(false);
-            wood_b.setEnabled(false);
+            player.useLantern(board, DOWN);
+            updateHidden();
+            lantern = false;
         }
-        monsterTurn();
         this.updateBoard();
     }
 

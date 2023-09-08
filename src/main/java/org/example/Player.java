@@ -80,13 +80,13 @@ public class Player {
         }
         else if(direction == LEFT)
         {
-            while(current_x > 0) {
+            while(current_x >= 0) {
                 board[current_x--][y].setHidden(false);
             }
         }
         else if(direction == DOWN)
         {
-            while(current_y < board.length) {
+            while(current_y >= 0) {
                 board[x][current_y--].setHidden(false);
             }
         }
