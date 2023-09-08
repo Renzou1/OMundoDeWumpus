@@ -200,13 +200,16 @@ public class Game implements ActionListener {
     public void updateBoard()
     {
         //updates player stuff
-        campLabels[player.getX()][player.getY()].setIcon(playerIcon);
         campLabels[player.getPreviousX()][player.getPreviousY()].setIcon(campIcon);
+        campLabels[player.getX()][player.getY()].setIcon(playerIcon);
 
         //updates Wumpus
+        if(!board[monster2.getPreviousX()][monster2.getPreviousY()].isPlayer())
         campLabels[wumpus.getPreviousX()][wumpus.getPreviousY()].setIcon(campIcon);
         campLabels[wumpus.getX()][wumpus.getY()].setIcon(wumpusIcon);
+
         //updates Monster2
+        if(!board[monster2.getPreviousX()][monster2.getPreviousY()].isPlayer() && !board[monster2.getPreviousX()][monster2.getPreviousY()].isWumpus())
         campLabels[monster2.getPreviousX()][monster2.getPreviousY()].setIcon(campIcon);
         campLabels[monster2.getX()][monster2.getY()].setIcon(monster2Icon);
     }

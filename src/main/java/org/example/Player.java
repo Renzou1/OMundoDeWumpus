@@ -16,6 +16,7 @@ public class Player {
     {
         if( y + 1 < board.length)
         {
+            previousX = x;
             previousY = y;
             board[x][y].setPlayer(false);
             y++;
@@ -28,6 +29,7 @@ public class Player {
     {
         if(x + 1 < board.length) {
             previousX = x;
+            previousY = y;
             board[x][y].setPlayer(false);
             x++;
             board[x][y].setPlayer(true);
@@ -39,6 +41,7 @@ public class Player {
     {
         if(x - 1 >= 0) {
             previousX = x;
+            previousY = y;
             board[x][y].setPlayer(false);
             x--;
             board[x][y].setPlayer(true);
@@ -50,6 +53,7 @@ public class Player {
     {
         if(y - 1 >= 0)
         {
+            previousX = x;
             previousY = y;
             board[x][y].setPlayer(false);
             y--;
