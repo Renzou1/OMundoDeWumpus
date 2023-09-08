@@ -186,6 +186,7 @@ public class Game implements ActionListener {
         } while (x == 0 && y == 0  && !board[x][y].isPit());
 
         board[x][y].setWood(true);
+        this.updateBoard();
     }
 
     public void monsterTurn()
@@ -199,8 +200,9 @@ public class Game implements ActionListener {
     public void updateBoard()
     {
         //updates player stuff
-        campLabels[player.getPreviousX()][player.getPreviousY()].setIcon(campIcon);
         campLabels[player.getX()][player.getY()].setIcon(playerIcon);
+        campLabels[player.getPreviousX()][player.getPreviousY()].setIcon(campIcon);
+
         //updates Wumpus
         campLabels[wumpus.getPreviousX()][wumpus.getPreviousY()].setIcon(campIcon);
         campLabels[wumpus.getX()][wumpus.getY()].setIcon(wumpusIcon);
@@ -221,9 +223,6 @@ public class Game implements ActionListener {
             over = true;
             return;
         }
-
-        this.updateBoard();
-
 
         console.setText("");
         console.append("Vida: " + String.valueOf(player.getHealth()) + "\n");
@@ -311,6 +310,7 @@ public class Game implements ActionListener {
             wood_b.setEnabled(false);
         }
         monsterTurn();
+        this.updateBoard();
     }
 
     public void setRand(Random rand) {

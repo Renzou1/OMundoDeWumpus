@@ -4,7 +4,6 @@ import static org.example.Main.*;
 
 public class Player {
     private int x = 0;
-
     private int previousX = 0;
     private int y = 0;
     private int previousY = 0;
@@ -15,59 +14,47 @@ public class Player {
 
     public void moveUp(Camp[][] board)
     {
-        previousY = y;
         if( y + 1 < board.length)
         {
+            previousY = y;
             board[x][y].setPlayer(false);
             y++;
             board[x][y].setPlayer(true);
-            board[x][x].setHidden(false);
-        }  else{
-            System.out.println("Voce da de cara com a parede");
-            health--;
+            board[x][y].setHidden(false);
         }
     }
 
     public void moveRight(Camp[][] board)
     {
-        previousX = x;
         if(x + 1 < board.length) {
+            previousX = x;
             board[x][y].setPlayer(false);
             x++;
             board[x][y].setPlayer(true);
-            board[x][x].setHidden(false);
-        }  else{
-            System.out.println("Voce da de cara com a parede");
-            health--;
+            board[x][y].setHidden(false);
         }
     }
 
     public void moveLeft(Camp[][] board)
     {
-        previousX = x;
         if(x - 1 >= 0) {
+            previousX = x;
             board[x][y].setPlayer(false);
             x--;
             board[x][y].setPlayer(true);
-            board[x][x].setHidden(false);
-        }  else {
-            System.out.println("Voce da de cara com a parede");
-            health--;
+            board[x][y].setHidden(false);
         }
     }
 
     public void moveDown(Camp[][] board)
     {
-        previousY = y;
         if(y - 1 >= 0)
         {
+            previousY = y;
             board[x][y].setPlayer(false);
             y--;
             board[x][y].setPlayer(true);
-            board[x][x].setHidden(false);
-        }  else{
-            System.out.println("Voce da de cara com a parede");
-            health--;
+            board[x][y].setHidden(false);
         }
     }
 
