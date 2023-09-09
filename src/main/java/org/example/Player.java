@@ -162,10 +162,12 @@ public class Player {
         return false;
     }
 
-    public boolean isArrow()
+    public int getArrows()
     {
-        if(arrows >= 1)
-            return true;
-        return false;
+        return arrows;
+    }
+
+    public void setArrows(int arrows) {
+        this.arrows = arrows;
     }
 }

@@ -120,6 +120,10 @@ public class Monster2 {
         return previousY;
     }
 
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
     public boolean isAlive() {
         return alive;
     }

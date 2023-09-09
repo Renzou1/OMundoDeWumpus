@@ -29,12 +29,16 @@ public class Game implements ActionListener{
     private JButton right_b;
     private JButton left_b;
     private JButton down_b;
+    private JButton fill_b;
     static final int titleSize = 40;
     private ImageIcon campIcon;
     private ImageIcon playerIcon;
     private ImageIcon wumpusIcon;
     private ImageIcon monster2Icon;
-    private boolean lantern = false;
+    private boolean lantern_state = false;
+    private boolean shoot_state = false;
+    private boolean fill_state = false;
+    private boolean normal_state = true;
     private JFrame gameFrame;
     private Random rand;
 
@@ -77,6 +81,7 @@ public class Game implements ActionListener{
         wood_b = new JButton("Pegar madeira");
         arrow_b = new JButton("Fazer flecha");
         shoot_b = new JButton("Atirar flecha");
+        fill_b = new JButton("Tapar abismo");
 
         up_b.setVisible(true);
         right_b.setVisible(true);
@@ -88,11 +93,13 @@ public class Game implements ActionListener{
         wood_b.setVisible(false);
         arrow_b.setVisible(false);
         shoot_b.setVisible(false);
+        fill_b.setVisible(false);
 
         gold_b.setEnabled(false);
         wood_b.setEnabled(false);
         arrow_b.setEnabled(false);
         shoot_b.setEnabled(false);
+        fill_b.setEnabled(false);
 
         console = new JTextArea();
         console.setEditable(false);
@@ -112,6 +119,7 @@ public class Game implements ActionListener{
         arrow_b.addActionListener(this);
         wood_b.addActionListener(this);
         gold_b.addActionListener(this);
+        fill_b.addActionListener(this);
 
         up_b.setFocusable(false);
         right_b.setFocusable(false);
@@ -123,6 +131,8 @@ public class Game implements ActionListener{
         arrow_b.setFocusable(false);
         wood_b.setFocusable(false);
         gold_b.setFocusable(false);
+        fill_b.setFocusable(false);
+
         console.setFocusable(false);
 
         playerPanel.add(up_b);
@@ -135,6 +145,7 @@ public class Game implements ActionListener{
         playerPanel.add(arrow_b);
         playerPanel.add(wood_b);
         playerPanel.add(gold_b);
+        playerPanel.add(fill_b);
 
         playerPanel.add(console);
 
@@ -163,7 +174,6 @@ public class Game implements ActionListener{
                 tilePanel.add(campLabels[j][i]);
             }
         }
-
 
         gameFrame.getContentPane().add(tilePanel);
         gameFrame.getContentPane().add(playerPanel);
@@ -244,8 +254,8 @@ public class Game implements ActionListener{
     public void monsterTurn()
     {
         //wumpus movement
-        wumpus.move(board, rand);
-        monster2.move(board,rand,player);
+        if(wumpus.isAlive()) wumpus.move(board, rand);
+        if(monster2.isAlive()) monster2.move(board,rand,player);
         playerTurn();
     }
 
@@ -256,24 +266,27 @@ public class Game implements ActionListener{
         campLabels[player.getX()][player.getY()].setIcon(playerIcon);
 
         //updates Wumpus
-        int previousX = wumpus.getPreviousX();
-        int previousY = wumpus.getPreviousY();
-        int x = wumpus.getX();
-        int y = wumpus.getY();
-        if(!board[previousX][previousY].isPlayer())
-        if(!board[previousX][previousY].isHidden())
-            campLabels[previousX][previousY].setIcon(campIcon);
-        if(!board[x][y].isHidden()) campLabels[x][y].setIcon(wumpusIcon);
-
+        if(wumpus.isAlive()) {
+            int previousX = wumpus.getPreviousX();
+            int previousY = wumpus.getPreviousY();
+            int x = wumpus.getX();
+            int y = wumpus.getY();
+            if (!board[previousX][previousY].isPlayer())
+                if (!board[previousX][previousY].isHidden())
+                    campLabels[previousX][previousY].setIcon(campIcon);
+            if (!board[x][y].isHidden()) campLabels[x][y].setIcon(wumpusIcon);
+        }
         //updates Monster2
-        previousX = monster2.getPreviousX();
-        previousY = monster2.getPreviousY();
-        x = monster2.getX();
-        y = monster2.getY();
-        if(!board[previousX][previousY].isPlayer() && !board[previousX][previousY].isWumpus())
-        if(!board[previousX][previousY].isHidden())
-            campLabels[previousX][previousY].setIcon(campIcon);
-        if(!board[x][y].isHidden()) campLabels[x][y].setIcon(monster2Icon);
+        if(monster2.isAlive()) {
+            int previousX = monster2.getPreviousX();
+            int previousY = monster2.getPreviousY();
+            int x = monster2.getX();
+            int y = monster2.getY();
+            if (!board[previousX][previousY].isPlayer() && !board[previousX][previousY].isWumpus())
+                if (!board[previousX][previousY].isHidden())
+                    campLabels[previousX][previousY].setIcon(campIcon);
+            if (!board[x][y].isHidden()) campLabels[x][y].setIcon(monster2Icon);
+        }
 
     }
 
@@ -296,94 +309,104 @@ public class Game implements ActionListener{
     public void updateConsoleAndButtons()
     {
         boolean first = true;
-        console.setText("");
-        console.append("Vida: " + player.getHealth() + "\n");
-        if(player.getWeight() > 0) {
-            console.append("Carregando: ");
-            if(player.getBattery() > 0){
-                console.append("lanterna");
-                first = false;
+        if(normal_state) {
+            console.setText("");
+            console.append("Vida: " + player.getHealth() + "\n");
+            if (player.getWeight() > 0) {
+                console.append("Carregando: ");
+                if (player.getBattery() > 0) {
+                    console.append("lanterna");
+                    first = false;
+                }
+                if (player.isBow()) {
+                    if (!first) console.append("/ ");
+                    console.append("arco");
+                    first = false;
+                }
+                if (player.getArrows() > 0) {
+                    if (!first) console.append("/ ");
+                    console.append(player.getArrows() + "flecha(s)");
+                    first = false;
+                }
+                if (player.getWood() > 0) {
+                    if (!first) console.append("/ ");
+                    console.append(player.getWood() + " madeira(s)");
+                    first = false;
+                }
+                if (player.isGold()) {
+                    if (!first) console.append("/ ");
+                    console.append("ouro");
+                }
+                console.append("\n");
             }
-            if (player.isBow()){
-                if(!first) console.append("/ ");
-                console.append("arco");
-                first = false;
+            if (board[player.getX()][player.getY()].isSmelly()) {
+                console.append("Voce sente o cheiro do wumpus\n");
             }
-            if (player.isArrow()){
-                if(!first) console.append("/ ");
-                console.append("flecha");
-                first = false;
+            if (board[player.getX()][player.getY()].isWindy()) {
+                console.append("Voce sente o vento de um abismo\n");
             }
-            if (player.getWood() > 0){
-                if(!first) console.append("/ ");
-                console.append(player.getWood() + " madeira(s)");
-                first = false;
+            if (player.getX() == board.length - 1) {
+                console.append("Parede a direita\n");
             }
-            if (player.isGold()){
-                if(!first) console.append("/ ");
-                console.append("ouro");
+            if (player.getY() == 0) {
+                console.append("Parede abaixo.\n");
             }
-            console.append("\n");
-        }
-        if (board[player.getX()][player.getY()].isSmelly()) {
-            console.append("Voce sente o cheiro do wumpus\n");
-        }
-        if (board[player.getX()][player.getY()].isWindy()) {
-            console.append("Voce sente o vento de um abismo\n");
-        }
-        if (player.getX() == board.length - 1) {
-            console.append("Parede a direita\n");
-        }
-        if (player.getY() == 0) {
-            console.append("Parede abaixo.\n");
-        }
-        if (player.getY() == board.length - 1) {
-            console.append("Parede acima.\n");
-        }
-        if (player.getX() == 0) {
-            console.append("Parede a esquerda.\n");
-        }
+            if (player.getY() == board.length - 1) {
+                console.append("Parede acima.\n");
+            }
+            if (player.getX() == 0) {
+                console.append("Parede a esquerda.\n");
+            }
 
+            if (board[player.getX()][player.getY()].isGold()) {
+                console.append("Voce consegue ver algo brilhante...\n");
+                gold_b.setVisible(true);
+                gold_b.setEnabled(true);
+            } else {
+                gold_b.setVisible(false);
+                gold_b.setEnabled(false);
+            }
+            if (board[player.getX()][player.getY()].isWood()) {
+                console.append("Voce pisa em uma madeira\n");
+                wood_b.setVisible(true);
+                wood_b.setEnabled(true);
+                arrow_b.setVisible(true);
+                arrow_b.setEnabled(true);
+            } else {
+                wood_b.setVisible(false);
+                wood_b.setEnabled(false);
+                arrow_b.setVisible(false);
+                arrow_b.setEnabled(false);
+            }
+            if (!drop_b.isVisible()) {
+                drop_b.setVisible(true);
+                drop_b.setEnabled(true);
+            }
+            if (player.getBattery() > 0) {
+                lantern_b.setVisible(true);
+                lantern_b.setEnabled(true);
+            } else {
+                lantern_b.setVisible(false);
+                lantern_b.setEnabled(false);
+            }
 
-        if(!drop_b.isVisible()){
-            drop_b.setVisible(true);
-            drop_b.setEnabled(true);
-        }
-        if (player.getBattery() > 0){
-            lantern_b.setVisible(true);
-            lantern_b.setEnabled(true);
+            if (player.getArrows() > 0) {
+                shoot_b.setVisible(true);
+                shoot_b.setEnabled(true);
+            } else {
+                shoot_b.setVisible(false);
+                shoot_b.setEnabled(false);
+            }
+            if (board[player.getX()][player.getY()].isWindy() && player.getWood() > 0) {
+                fill_b.setVisible(true);
+                fill_b.setEnabled(true);
+            } else {
+                fill_b.setVisible(false);
+                fill_b.setEnabled(false);
+            }
         }  else{
-            lantern_b.setVisible(false);
-            lantern_b.setEnabled(false);
+            console.setText("Escolha a direcao");
         }
-        if (board[player.getX()][player.getY()].isGold()) {
-            console.append("Voce consegue ver algo brilhante...\n");
-            gold_b.setVisible(true);
-            gold_b.setEnabled(true);
-        }  else{
-            gold_b.setVisible(false);
-            gold_b.setEnabled(false);
-        }
-        if (board[player.getX()][player.getY()].isWood()) {
-            console.append("Voce pisa em uma madeira\n");
-            wood_b.setVisible(true);
-            wood_b.setEnabled(true);
-            arrow_b.setVisible(true);
-            arrow_b.setEnabled(true);
-        }  else{
-            wood_b.setVisible(false);
-            wood_b.setEnabled(false);
-            arrow_b.setVisible(false);
-            arrow_b.setEnabled(false);
-        }
-        if(player.isArrow()){
-            shoot_b.setVisible(true);
-            shoot_b.setEnabled(true);
-        }  else{
-            shoot_b.setVisible(false);
-            shoot_b.setEnabled(false);
-        }
-
         campLabels[player.getX()][player.getY()].setVisible(true);
     }
     public void checkIfOver()
@@ -426,65 +449,168 @@ public class Game implements ActionListener{
         arrow_b.setEnabled(false);
         shoot_b.setEnabled(false);
         drop_b.setEnabled(false);
-        //skip = true;
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(!lantern) {
-            if (e.getSource() == lantern_b) {
-                console.setText("Escolha a direcao");
-                player.setBattery(player.getBattery() - 1);
-                lantern = true;
-                hideNonDirectionButtons();
-                if (player.getBattery() == 0) {
-                    lantern_b.setVisible(false);
-                    lantern_b.setEnabled(false);
-                }
-            } else if (e.getSource() == up_b) {
-                player.moveUp(board);
-            } else if (e.getSource() == right_b) {
-                player.moveRight(board);
-            } else if (e.getSource() == left_b) {
-                player.moveLeft(board);
-            } else if (e.getSource() == down_b) {
-                player.moveDown(board);
-            }  else if (e.getSource() == gold_b) {
-                board[player.getX()][player.getY()].setGold(false);
-                player.setGold(1);
-                gold_b.setVisible(false);
-                gold_b.setEnabled(false);
-            } else if (e.getSource() == wood_b) {
-                board[player.getX()][player.getY()].setWood(false);
-                player.setWood(player.getWood() + 1);
-                wood_b.setVisible(false);
-                wood_b.setEnabled(false);
-            }
-            if(!lantern) monsterTurn();
+        Object source = e.getSource();
 
-        } else if (e.getSource() == up_b) {
-            player.useLantern(board, UP);
-            updateConsoleAndButtons();
-            updateHidden();
-            lantern = false;
-        } else if (e.getSource() == right_b) {
-            player.useLantern(board, RIGHT);
-            updateConsoleAndButtons();
-            updateHidden();
-            lantern = false;
-        } else if (e.getSource() == left_b) {
-            player.useLantern(board, LEFT);
-            updateConsoleAndButtons();
-            updateHidden();
-            lantern = false;
-        } else if (e.getSource() == down_b) {
-            player.useLantern(board, DOWN);
-            updateConsoleAndButtons();
-            updateHidden();
-            lantern = false;
+        if (source == lantern_b) {
+            player.setBattery(player.getBattery() - 1);
+            lantern_state = true;
+            if (player.getBattery() == 0) {
+                lantern_b.setVisible(false);
+                lantern_b.setEnabled(false);
+            }
+
+        } else if (source == up_b) {
+            if(normal_state)
+            {
+                player.moveUp(board);
+            }  else if(lantern_state){
+                player.useLantern(board, UP);
+                updateHidden();
+                lantern_state = false;
+            }  else if (shoot_state){
+                player.setArrows(player.getArrows() - 1);
+               if(player.getY() + 1 < board.length && board[player.getX()][player.getY() + 1].isWumpus())
+                   wumpus.setAlive(false);
+                if(player.getY() + 1 < board.length && board[player.getX()][player.getY() + 1].isMonster2())
+                    monster2.setAlive(false);
+                shoot_state = false;
+            }  else if (fill_state){
+                player.setWood(player.getWood() - 1);
+                if(player.getY() + 1 < board.length && board[player.getX()][player.getY() + 1].isPit()) {
+                    board[player.getX()][player.getY() + 1].setPit(false);
+                    campLabels[player.getX()][player.getY() + 1].setIcon(campIcon); //todo create another icon
+                }
+                fill_state = false;
+            }
+
+        } else if (source == right_b) {
+            if(normal_state)
+            {
+                player.moveRight(board);
+            } else if(lantern_state){
+                player.useLantern(board, RIGHT);
+                updateHidden();
+                lantern_state = false;
+            }  else if (shoot_state){
+                player.setArrows(player.getArrows() - 1);
+               if(player.getX() + 1 < board.length && board[player.getX() + 1][player.getY()].isWumpus())
+                   wumpus.setAlive(false);
+                if(player.getX() + 1 < board.length && board[player.getX() + 1][player.getY()].isMonster2())
+                    monster2.setAlive(false);
+                shoot_state = false;
+            }  else if (fill_state){
+                player.setWood(player.getWood() - 1);
+                if(player.getX() + 1 < board.length && board[player.getX() + 1][player.getY()].isPit()) {
+                    board[player.getX() + 1][player.getY()].setPit(false);
+                    campLabels[player.getX() + 1][player.getY()].setIcon(campIcon); //todo create another icon
+                }
+                fill_state = false;
+            }
+
+        } else if (source == left_b) {
+            if(normal_state){
+                player.moveLeft(board);
+            }  else if(lantern_state){
+                player.useLantern(board, LEFT);
+                updateHidden();
+                lantern_state = false;
+            }  else if (shoot_state){
+                player.setArrows(player.getArrows() - 1);
+               if(player.getX() - 1 >= 0 && board[player.getX() - 1][player.getY()].isWumpus())
+                   wumpus.setAlive(false);
+                if(player.getX() - 1 >= 0 && board[player.getX() - 1][player.getY()].isMonster2())
+                    monster2.setAlive(false);
+                shoot_state = false;
+            }  else if (fill_state){
+                player.setWood(player.getWood() - 1);
+                if(player.getX() - 1 >= 0 && board[player.getX() - 1][player.getY()].isPit()) {
+                    board[player.getX() - 1][player.getY()].setPit(false);
+                    campLabels[player.getX() - 1][player.getY()].setIcon(campIcon); //todo create another icon
+                }
+                fill_state = false;
+            }
+
+        } else if (source == down_b) {
+            if(normal_state){
+                player.moveDown(board);
+            }  else if(lantern_state){
+                player.useLantern(board, DOWN);
+                updateHidden();
+                lantern_state = false;
+            }  else if (shoot_state){
+                player.setArrows(player.getArrows() - 1);
+               if(player.getY() - 1 >= 0 && board[player.getX()][player.getY() - 1].isWumpus())
+                   wumpus.setAlive(false);
+                if(player.getY() - 1 >= 0 && board[player.getX()][player.getY() - 1].isMonster2())
+                    monster2.setAlive(false);
+                shoot_state = false;
+            }  else if (fill_state){
+                player.setWood(player.getWood() - 1);
+                if(player.getY() - 1 >= 0 && board[player.getX()][player.getY() - 1].isPit()) {
+                    board[player.getX()][player.getY() - 1].setPit(false);
+                    updateWind(player.getX(), player.getY() - 1);
+                    campLabels[player.getX()][player.getY() - 1].setIcon(campIcon); //todo create another icon
+                }
+                fill_state = false;
+            }
+
+        }  else if (source == gold_b) {
+            board[player.getX()][player.getY()].setGold(false);
+            player.setGold(1);
+            gold_b.setVisible(false);
+            gold_b.setEnabled(false);
+
+        } else if (source == wood_b) {
+            board[player.getX()][player.getY()].setWood(false);
+            player.setWood(player.getWood() + 1);
+            wood_b.setVisible(false);
+            wood_b.setEnabled(false);
+
+        }  else if (source == drop_b){
+
+        }  else if (source == arrow_b){
+            player.setArrows(player.getArrows() + 1);
+            board[player.getX()][player.getY()].setWood(false);
+        }  else if (source == shoot_b){
+            shoot_state = true;
+        }  else if (source == fill_b){
+            fill_state = true;
         }
+
+        if(!lantern_state && !shoot_state && !fill_state){
+            normal_state = true;
+        }  else normal_state = false;
+
+
+        if(!normal_state) hideNonDirectionButtons();
+        updateConsoleAndButtons();
         this.updateBoard();
+        if(normal_state) monsterTurn();
     }
 
+    public void removeWumpus()
+    {
+        board[wumpus.getX()][wumpus.getY()].setWumpus(false);
+        campLabels[wumpus.getX()][wumpus.getY()].setIcon(campIcon);
+    }
+
+    public void removeMonster2()
+    {
+
+        board[monster2.getX()][monster2.getY()].setWumpus(false);
+        campLabels[monster2.getX()][monster2.getY()].setIcon(campIcon);
+    }
+
+    public void updateWind(int x, int y)
+    {
+        if(x + 1 < board.length) board[x+1][y].setWindy(false); //todo false positives here
+        if(y + 1 < board.length) board[x][y+1].setWindy(false);
+        if(x - 1 >= 0) board[x-1][y].setWindy(false);
+        if(y - 1 >= 0) board[x][y-1].setWindy(false);
+    }
     public void setRand(Random rand) {
         this.rand = rand;
     }
