@@ -58,7 +58,12 @@ public class Main {
                     size = Integer.parseInt(size_t.getText());
                     inicio.setVisible(false);
                     inicio.dispose();
-                    startGame();
+                    if(size > 4) startGame();
+                    else{
+                        //new JDialog("Size too small");
+                        System.exit(0);
+                    }
+
                 }
             }
         });
