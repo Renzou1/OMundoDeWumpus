@@ -48,6 +48,9 @@ public class Game implements ActionListener{
         this.height = height;
         this.size = size;
     }
+    public void setRand(Random rand) {
+        this.rand = rand;
+    }
     public void GenerateBoard(){
 
         board = new Camp[size][size];
@@ -259,7 +262,6 @@ public class Game implements ActionListener{
         this.updateBoard();
         playerTurn();
     }
-
     public void updateBoard()
     {
         //updates player stuff
@@ -290,7 +292,6 @@ public class Game implements ActionListener{
         }
 
     }
-
     public void updateHidden()
     {
         for(int i = 0; i < board.length; i++)
@@ -305,8 +306,6 @@ public class Game implements ActionListener{
         checkIfOver();
         updateConsoleAndButtons();
     }
-
-
     public void updateConsoleAndButtons()
     {
         boolean first = true;
@@ -435,7 +434,6 @@ public class Game implements ActionListener{
             console.setText("Voce ganhou! Parabens.\n");
         }
     }
-
     public void hideNonDirectionButtons()
     {
         lantern_b.setVisible(false);
@@ -588,24 +586,22 @@ public class Game implements ActionListener{
 
         normal_state = !lantern_state && !shoot_state && !fill_state;
 
-
+        if(!wumpus.isAlive()) removeWumpus();
+        if(!monster2.isAlive()) removeMonster2();
         if(!normal_state) hideNonDirectionButtons();
         updateConsoleAndButtons();
         if(normal_state) monsterTurn();
     }
-
     public void removeWumpus() //todo use
     {
         board[wumpus.getX()][wumpus.getY()].setWumpus(false);
         campLabels[wumpus.getX()][wumpus.getY()].setIcon(campIcon);
     }
-
     public void removeMonster2()
     {
         board[monster2.getX()][monster2.getY()].setWumpus(false);
         campLabels[monster2.getX()][monster2.getY()].setIcon(campIcon);
     }
-
     public void updateWind(int x, int y)
     {
         if(hasNearbyPit(x,y))
@@ -627,7 +623,6 @@ public class Game implements ActionListener{
                 board[x][y - 1].setWindy(false);
         }
     }
-
     public boolean hasNearbyPit(int x, int y)
     {
         int pits = 0;
@@ -642,9 +637,7 @@ public class Game implements ActionListener{
 
         return pits > 0;
     }
-    public void setRand(Random rand) {
-        this.rand = rand;
-    }
+
 
 }
 

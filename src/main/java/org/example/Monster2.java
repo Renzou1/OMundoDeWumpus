@@ -28,7 +28,7 @@ public class Monster2 {
 
         previousX = x;
         previousY = y;
-
+        board[x][y].setMonster2(false);
         while(previousX == x && previousY == y)
         {
             monster2Direction1 = rand.nextInt(4) + 1;
@@ -40,14 +40,15 @@ public class Monster2 {
                 y++;
                 checkPlayerContact(player);
 
-                if (x + 1 >= board.length)  //left
+                if (x + 1 >= board.length || (board[x + 1][y].isPit() && !board[x-1][y].isPit()))  //left
                 {
                     x--;
-                } else if (x - 1 <= 0) {
+                } else if (x - 1 <= 0 || (board[x - 1][y].isPit() && !board[x + 1][y].isPit())) {
                     x++;
                 } else {
-                    if (monster2Direction2 == 0) x--;
-                    else x++;
+                    if (monster2Direction2 == 0 && !board[x - 1][y].isPit()) x--;
+                    else if (!board[x + 1][y].isPit()) x++;
+                    else y-=2;
                 }
             } else if (monster2Direction1 == RIGHT && x + 2 < board.length - 1) {
                 x++;
@@ -55,14 +56,15 @@ public class Monster2 {
                 x++;
                 checkPlayerContact(player);
 
-                if (y + 1 >= board.length)  //down
+                if (y + 1 >= board.length || (board[x][y + 1].isPit() && !board[x][y-1].isPit()))  //down
                 {
                     y--;
-                } else if (y - 1 <= 0) {
+                } else if (y - 1 <= 0 || (board[x][y - 1].isPit() && !board[x][y + 1].isPit())) {
                     y++;
                 } else {
-                    if (monster2Direction2 == 0) y--;
-                    else y++;
+                    if (monster2Direction2 == 0 && !board[x][y - 1].isPit()) y--;
+                    else if (!board[x][y + 1].isPit()) y++;
+                    else x-=2;
                 }
             } else if (monster2Direction1 == LEFT && x - 2 >= 0) {
                 x--;
@@ -70,31 +72,34 @@ public class Monster2 {
                 x--;
                 checkPlayerContact(player);
 
-                if (y + 1 >= board.length)  //down
+                if (y + 1 >= board.length || (board[x][y + 1].isPit() && !board[x][y-1].isPit()))  //down
                 {
                     y--;
-                } else if (y - 1 <= 0) {
+                } else if (y - 1 <= 0 || (board[x][y-1].isPit() && !board[x][y + 1].isPit())) {
                     y++;
                 } else {
-                    if (monster2Direction2 == 0) y--;
-                    else y++;
+                    if (monster2Direction2 == 0 && !board[x][y - 1].isPit()) y--;
+                    else if (!board[x][y+1].isPit()) y++;
+                    else x+=2;
                 }
             } else if (monster2Direction1 == DOWN && y - 2 >= 0) {
                 y--;
                 checkPlayerContact(player);
                 y--;
-                if (x + 1 >= board.length)  //left
+                if (x + 1 >= board.length || (board[x+1][y].isPit() && !board[x-1][y].isPit()))  //left
                 {
                     x--;
-                } else if (x - 1 <= 0) {
+                } else if (x - 1 <= 0 || (board[x-1][y].isPit() && !board[x+1][y].isPit())) {
                     x++;
                 } else {
-                    if (monster2Direction2 == 0) x--;
-                    else x++;
+                    if (monster2Direction2 == 0 && !board[x-1][y].isPit()) x--;
+                    else if (!board[x+1][y].isPit()) x++;
+                    else y+=2;
                 }
             }
         }
         checkPlayerContact(player); // after second movement
+        board[x][y].setMonster2(true);
     }
     public int getX() {
         return x;
