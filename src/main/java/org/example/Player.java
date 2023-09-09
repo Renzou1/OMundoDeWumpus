@@ -10,6 +10,8 @@ public class Player {
     private int health = 100;
     private int wood = 0;
     private int battery = 2;
+
+    private boolean lantern = true;
     private int gold = 0;
     private int bow = 1;
     private int arrows = 0;
@@ -169,5 +171,13 @@ public class Player {
 
     public void setArrows(int arrows) {
         this.arrows = arrows;
+    }
+
+    public void setBow(int bow) {
+        this.bow = bow;
+    }
+
+    public void setLantern(boolean lantern) {
+        this.lantern = lantern;
     }
 }

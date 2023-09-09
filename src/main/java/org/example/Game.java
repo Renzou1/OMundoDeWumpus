@@ -48,6 +48,9 @@ public class Game implements ActionListener{
         this.height = height;
         this.size = size;
     }
+    public void setRand(Random rand) {
+        this.rand = rand;
+    }
     public void GenerateBoard(){
 
         board = new Camp[size][size];
@@ -190,9 +193,9 @@ public class Game implements ActionListener{
 
         boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("-agentlib:jdwp");
         if(isDebug)
-            for (int i = 0; i < board.length; i++)
+            for (Camp[] camps : board)
                 for (int j = 0; j < board.length; j++)
-                    board[i][j].setHidden(false);
+                    camps[j].setHidden(false);
         int x;
         int y;
 
@@ -259,7 +262,6 @@ public class Game implements ActionListener{
         this.updateBoard();
         playerTurn();
     }
-
     public void updateBoard()
     {
         //updates player stuff
@@ -290,7 +292,6 @@ public class Game implements ActionListener{
         }
 
     }
-
     public void updateHidden()
     {
         for(int i = 0; i < board.length; i++)
@@ -305,8 +306,6 @@ public class Game implements ActionListener{
         checkIfOver();
         updateConsoleAndButtons();
     }
-
-
     public void updateConsoleAndButtons()
     {
         boolean first = true;
@@ -405,6 +404,14 @@ public class Game implements ActionListener{
                 fill_b.setVisible(false);
                 fill_b.setEnabled(false);
             }
+            if(player.getWeight() <= 0)
+            {
+                drop_b.setVisible(false);
+                drop_b.setEnabled(false);
+            }  else{
+                drop_b.setVisible(true);
+                drop_b.setEnabled(true);
+            }
         }  else{
             console.setText("Escolha a direcao");
         }
@@ -435,7 +442,6 @@ public class Game implements ActionListener{
             console.setText("Voce ganhou! Parabens.\n");
         }
     }
-
     public void hideNonDirectionButtons()
     {
         lantern_b.setVisible(false);
@@ -576,6 +582,90 @@ public class Game implements ActionListener{
             wood_b.setEnabled(false);
 
         }  else if (source == drop_b){
+            gameFrame.setEnabled(false);
+            JFrame choose = new JFrame();
+            choose.setLayout(new GridLayout(1,0));
+            choose.setLocationRelativeTo(null);
+            choose.setSize(600,400);
+            choose.setVisible(true);
+            choose.setTitle("Escolha qual largar");
+
+            JButton bow = new JButton("Arco");
+            JButton arrow = new JButton("Flecha");
+            JButton gold = new JButton("Ouro");
+            JButton lantern = new JButton("Lanterna");
+            JButton wood = new JButton("Madeira");
+
+            ActionListener local = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    Object source = e.getSource();
+                    if(source == bow)
+                    {
+                        player.setBow(0);
+                        board[player.getX()][player.getY()].setBow(true);
+                    }
+                    if(source == arrow)
+                    {
+                        player.setArrows(player.getArrows() - 1);
+                        board[player.getX()][player.getY()].setArrow(true);
+                    }
+                    if(source == gold)
+                    {
+                        player.setGold(0);
+                        board[player.getX()][player.getY()].setGold(true);
+                    }
+                    if(source == lantern)
+                    {
+                        player.setLantern(false);
+                        board[player.getX()][player.getY()].setLantern(true);
+                    }
+                    if(source == wood)
+                    {
+                        player.setWood(player.getWood() - 1);
+                        board[player.getX()][player.getY()].setWood(true);
+                    }
+                    gameFrame.setEnabled(true);
+                    choose.dispose();
+                }
+            };
+            if(player.isBow()) {
+                bow.setVisible(true);
+                bow.setEnabled(true);
+                bow.addActionListener(local);
+                bow.setFocusable(false);
+                choose.add(bow);
+            }
+            if(player.getArrows() > 0) {
+                arrow.setVisible(true);
+                arrow.setEnabled(true);
+                arrow.addActionListener(local);
+                arrow.setFocusable(false);
+                choose.add(arrow);
+            }
+            if(player.isGold()) {
+                gold.setVisible(true);
+                gold.setEnabled(true);
+                gold.addActionListener(local);
+                gold.setFocusable(false);
+                choose.add(gold);
+            }
+            if(player.getBattery() > 0) {
+                lantern.setVisible(true);
+                lantern.setEnabled(true);
+                lantern.addActionListener(local);
+                lantern.setFocusable(false);
+                choose.add(lantern);
+            }
+            if(player.getWood() > 0) {
+                wood.setVisible(true);
+                wood.setEnabled(true);
+                wood.addActionListener(local);
+                wood.setFocusable(false);
+                choose.add(wood);
+            }
+
+
 
         }  else if (source == arrow_b){
             player.setArrows(player.getArrows() + 1);
@@ -588,24 +678,22 @@ public class Game implements ActionListener{
 
         normal_state = !lantern_state && !shoot_state && !fill_state;
 
-
+        if(!wumpus.isAlive()) removeWumpus();
+        if(!monster2.isAlive()) removeMonster2();
         if(!normal_state) hideNonDirectionButtons();
         updateConsoleAndButtons();
         if(normal_state) monsterTurn();
     }
-
     public void removeWumpus() //todo use
     {
         board[wumpus.getX()][wumpus.getY()].setWumpus(false);
         campLabels[wumpus.getX()][wumpus.getY()].setIcon(campIcon);
     }
-
     public void removeMonster2()
     {
         board[monster2.getX()][monster2.getY()].setWumpus(false);
         campLabels[monster2.getX()][monster2.getY()].setIcon(campIcon);
     }
-
     public void updateWind(int x, int y)
     {
         if(hasNearbyPit(x,y))
@@ -627,7 +715,6 @@ public class Game implements ActionListener{
                 board[x][y - 1].setWindy(false);
         }
     }
-
     public boolean hasNearbyPit(int x, int y)
     {
         int pits = 0;
@@ -642,9 +729,7 @@ public class Game implements ActionListener{
 
         return pits > 0;
     }
-    public void setRand(Random rand) {
-        this.rand = rand;
-    }
+
 
 }
 

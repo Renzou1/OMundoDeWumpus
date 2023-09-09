@@ -11,6 +11,12 @@ public class Camp {
     private boolean isWood = false;
     private boolean isGold = false;
 
+    private boolean isBow = false;
+
+    private boolean isLantern = false;
+
+    private boolean isArrow = false;
+
     public boolean isPit(){
         return isPit;
     }
@@ -85,5 +91,17 @@ public class Camp {
 
     public void setGold(boolean gold) {
         isGold = gold;
+    }
+
+    public void setLantern(boolean lantern) {
+        isLantern = lantern;
+    }
+
+    public void setBow(boolean bow) {
+        isBow = bow;
+    }
+
+    public void setArrow(boolean arrow) {
+        isArrow = arrow;
     }
 }
