@@ -7,10 +7,8 @@ import static org.example.Main.*;
 public class Monster2 {
 
     private int x;
-
     private int previousX;
     private int y;
-
     private int previousY;
     public void checkPlayerContact(Player player)
     {

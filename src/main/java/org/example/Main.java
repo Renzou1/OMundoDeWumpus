@@ -5,7 +5,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
-import java.util.Scanner;
 
 public class Main {
     static final int UP = 1;
@@ -17,22 +16,14 @@ public class Main {
     private static int size;
     private static boolean clear;
     public static void main(String[] args) {
-
         createOptionsGUI();
-
-        Random rand = new Random();
-        Game game = new Game(width, height, size);
-        game.setRand(rand);
-
-        game.GenerateBoard();
-        game.playerTurn();
-
+        startGame();
     }
 
     public static void createOptionsGUI()
     {
         JFrame inicio = new JFrame();
-        inicio.setTitle("Escolha resolucao");
+        inicio.setTitle("Escolha resolucao e tamanho do jogo");
         inicio.setLayout(new GridLayout(1,2));
 
         JTextField width_t = new JTextField();
@@ -56,7 +47,7 @@ public class Main {
         inicio.add(size_t);
         inicio.add(ok);
         inicio.setVisible(true);
-        inicio.setBounds(0,0, 300, 100);
+        inicio.setBounds(0,0, 400, 100);
         inicio.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         while(!clear) {
             ok.addActionListener(new ActionListener() {
@@ -74,5 +65,15 @@ public class Main {
                 }
             });
         }
+
+    }
+    public static void startGame()
+    {
+        Random rand = new Random();
+        Game game = new Game(width, height, size);
+        game.setRand(rand);
+
+        game.GenerateBoard();
+        game.playerTurn();
     }
 }

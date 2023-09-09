@@ -32,6 +32,7 @@ public class Game implements ActionListener{
     private ImageIcon wumpusIcon;
     private ImageIcon monster2Icon;
     private boolean lantern = false;
+    private JFrame gameFrame;
     private Random rand;
 
     Game(int width, int height, int size)
@@ -47,7 +48,7 @@ public class Game implements ActionListener{
         wumpus = new Wumpus();
         monster2 = new Monster2();
 
-        JFrame gameFrame = new JFrame();
+        gameFrame = new JFrame();
         gameFrame.setVisible(true);
         gameFrame.setSize(width,height);
         gameFrame.setTitle("O Mundo de Wumpus");
@@ -146,10 +147,9 @@ public class Game implements ActionListener{
 
         boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("-agentlib:jdwp");
         if(isDebug)
-            for(int i = 0; i < board.length; i++)
-                for(int j = 0; j < board.length; j++)
+            for (int i = 0; i < board.length; i++)
+                for (int j = 0; j < board.length; j++)
                     board[i][j].setHidden(false);
-
         int x;
         int y;
 
@@ -206,8 +206,8 @@ public class Game implements ActionListener{
         } while (current < desiredAmount || (x == 0 && y == 0)  || board[x][y].isPit());
 
         this.updateBoard();
+        if(isDebug) updateHidden();
     }
-
     public void monsterTurn()
     {
         //wumpus movement
@@ -256,14 +256,7 @@ public class Game implements ActionListener{
     }
     public void playerTurn() {
 
-        if (board[player.getX()][player.getY()].isWumpus() || player.getHealth() <= 0) {
-            player.setHealth(0);
-            console.setText("Voce foi morto. Fim de Jogo\n");
-            return;
-        } else if (player.getX() == 0 && player.getY() == 0 && player.isGold()) {
-            console.setText("Voce ganhou! Parabens.\n");
-            return;
-        }
+        checkIfOver();
 
         console.setText("");
         console.append("Vida: " + player.getHealth() + "\n");
@@ -314,14 +307,33 @@ public class Game implements ActionListener{
             wood_b.setEnabled(false);
         }
         campLabels[player.getX()][player.getY()].setVisible(true);
-        if (board[player.getX()][player.getY()].isWumpus()) {
-            player.setHealth(0);
-            console.setText("Voce foi morto. Fim de Jogo.");
-        } else if (player.getX() == 0 && player.getY() == 0 && player.isGold()) {
-            console.setText("Voce ganhou. Parabens!\n");
-        }
     }
 
+    public void checkIfOver()
+    {
+        if (board[player.getX()][player.getY()].isWumpus() || player.getHealth() <= 0) {
+            updateBoard();
+            player.setHealth(0);
+            console.setText("Vida: 0\nVoce foi morto");
+            int reply = JOptionPane.showConfirmDialog(null, "Voce foi morto. Jogar de novo?", "Fim de jogo", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                gameFrame.dispose();
+                startGame();
+            } else {
+                System.exit(0);
+            }
+        } else if (player.getX() == 0 && player.getY() == 0 && player.isGold()) {
+            updateBoard();
+            int reply = JOptionPane.showConfirmDialog(null, "Voce ganhou! Parabens. Jogar de novo?", "Fim de jogo", JOptionPane.YES_NO_OPTION);
+            if (reply == JOptionPane.YES_OPTION) {
+                gameFrame.dispose();
+                startGame();
+            } else {
+                System.exit(0);
+            }
+            console.setText("Voce ganhou! Parabens.\n");
+        }
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         if(!lantern) {
@@ -343,8 +355,8 @@ public class Game implements ActionListener{
                 player.moveDown(board);
             }  else if (e.getSource() == gold_b) {
                 board[player.getX()][player.getY()].setGold(false);
-                player.setGold(true);
-                console.append("Ouro em inventario.\n");
+                player.setGold(1);
+                console.append("Ouro em inventario.\n"); //todo nao funcina
                 gold_b.setVisible(false);
                 gold_b.setEnabled(false);
             } else if (e.getSource() == wood_b) {

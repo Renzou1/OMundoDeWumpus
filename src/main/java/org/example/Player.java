@@ -10,7 +10,10 @@ public class Player {
     private int health = 100;
     private int wood = 0;
     private int battery = 2;
-    private boolean gold = false;
+    private int gold = 0;
+    private int bow = 1;
+    private int arrows = 0;
+    private int weight;
 
     public void moveUp(Camp[][] board)
     {
@@ -104,14 +107,6 @@ public class Player {
         return y;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
     public int getHealth() {
         return health;
     }
@@ -129,10 +124,12 @@ public class Player {
     }
 
     public boolean isGold() {
-        return gold;
+        if(gold == 1)
+        return true;
+        return false;
     }
 
-    public void setGold(boolean gold) {
+    public void setGold(int gold) {
         this.gold = gold;
     }
 
@@ -150,5 +147,11 @@ public class Player {
 
     public int getPreviousY() {
         return previousY;
+    }
+
+    public int getWeight() {
+        weight = gold + bow + wood + arrows;
+        if(battery > 0) weight++; //adds lantern
+        return weight;
     }
 }
