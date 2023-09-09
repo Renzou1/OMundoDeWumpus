@@ -26,11 +26,11 @@ public class Main {
         inicio.setLayout(new GridLayout(1,2));
 
         JTextField width_t = new JTextField();
-        width_t.setText("1024");
+        width_t.setText("1920");
         width_t.setVisible(true);
 
         JTextField height_t = new JTextField();
-        height_t.setText("720");
+        height_t.setText("1080");
         height_t.setVisible(true);
 
         JButton ok = new JButton("OK");

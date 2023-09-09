@@ -92,8 +92,10 @@ public class Game implements ActionListener{
         gold_b.setEnabled(false);
         wood_b.setEnabled(false);
         arrow_b.setEnabled(false);
+        shoot_b.setEnabled(false);
 
         console = new JTextArea();
+        console.setEditable(false);
         console.setVisible(true);
         up_b.setIcon(new ImageIcon(new ImageIcon("resources\\upArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width),((height-titleSize)/13), Image.SCALE_DEFAULT)));
         right_b.setIcon(new ImageIcon(new ImageIcon("resources\\rightArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width), ((height-titleSize)/13), Image.SCALE_DEFAULT)));
@@ -110,6 +112,18 @@ public class Game implements ActionListener{
         arrow_b.addActionListener(this);
         wood_b.addActionListener(this);
         gold_b.addActionListener(this);
+
+        up_b.setFocusable(false);
+        right_b.setFocusable(false);
+        left_b.setFocusable(false);
+        down_b.setFocusable(false);
+        drop_b.setFocusable(false);
+        lantern_b.setFocusable(false);
+        shoot_b.setFocusable(false);
+        arrow_b.setFocusable(false);
+        wood_b.setFocusable(false);
+        gold_b.setFocusable(false);
+        console.setFocusable(false);
 
         playerPanel.add(up_b);
         playerPanel.add(right_b);
@@ -331,7 +345,14 @@ public class Game implements ActionListener{
         }
 
 
-        if (player.getBattery() <= 0 && lantern_b.isVisible()) {
+        if(!drop_b.isVisible()){
+            drop_b.setVisible(true);
+            drop_b.setEnabled(true);
+        }
+        if (player.getBattery() > 0){
+            lantern_b.setVisible(true);
+            lantern_b.setEnabled(true);
+        }  else{
             lantern_b.setVisible(false);
             lantern_b.setEnabled(false);
         }
@@ -390,6 +411,23 @@ public class Game implements ActionListener{
             console.setText("Voce ganhou! Parabens.\n");
         }
     }
+
+    public void hideNonDirectionButtons()
+    {
+        lantern_b.setVisible(false);
+        gold_b.setVisible(false);
+        wood_b.setVisible(false);
+        arrow_b.setVisible(false);
+        shoot_b.setVisible(false);
+        drop_b.setVisible(false);
+
+        gold_b.setEnabled(false);
+        wood_b.setEnabled(false);
+        arrow_b.setEnabled(false);
+        shoot_b.setEnabled(false);
+        drop_b.setEnabled(false);
+        //skip = true;
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         if(!lantern) {
@@ -397,6 +435,7 @@ public class Game implements ActionListener{
                 console.setText("Escolha a direcao");
                 player.setBattery(player.getBattery() - 1);
                 lantern = true;
+                hideNonDirectionButtons();
                 if (player.getBattery() == 0) {
                     lantern_b.setVisible(false);
                     lantern_b.setEnabled(false);
