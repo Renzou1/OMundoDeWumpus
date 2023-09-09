@@ -256,6 +256,7 @@ public class Game implements ActionListener{
         //wumpus movement
         if(wumpus.isAlive()) wumpus.move(board, rand);
         if(monster2.isAlive()) monster2.move(board,rand,player);
+        this.updateBoard();
         playerTurn();
     }
 
@@ -443,12 +444,14 @@ public class Game implements ActionListener{
         arrow_b.setVisible(false);
         shoot_b.setVisible(false);
         drop_b.setVisible(false);
+        fill_b.setVisible(false);
 
         gold_b.setEnabled(false);
         wood_b.setEnabled(false);
         arrow_b.setEnabled(false);
         shoot_b.setEnabled(false);
         drop_b.setEnabled(false);
+        fill_b.setEnabled(false);
     }
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -481,6 +484,7 @@ public class Game implements ActionListener{
                 player.setWood(player.getWood() - 1);
                 if(player.getY() + 1 < board.length && board[player.getX()][player.getY() + 1].isPit()) {
                     board[player.getX()][player.getY() + 1].setPit(false);
+                    updateWind(player.getX(), player.getY() + 1);
                     campLabels[player.getX()][player.getY() + 1].setIcon(campIcon); //todo create another icon
                 }
                 fill_state = false;
@@ -505,6 +509,7 @@ public class Game implements ActionListener{
                 player.setWood(player.getWood() - 1);
                 if(player.getX() + 1 < board.length && board[player.getX() + 1][player.getY()].isPit()) {
                     board[player.getX() + 1][player.getY()].setPit(false);
+                    updateWind(player.getX() + 1, player.getY());
                     campLabels[player.getX() + 1][player.getY()].setIcon(campIcon); //todo create another icon
                 }
                 fill_state = false;
@@ -528,6 +533,7 @@ public class Game implements ActionListener{
                 player.setWood(player.getWood() - 1);
                 if(player.getX() - 1 >= 0 && board[player.getX() - 1][player.getY()].isPit()) {
                     board[player.getX() - 1][player.getY()].setPit(false);
+                    updateWind(player.getX() - 1, player.getY());
                     campLabels[player.getX() - 1][player.getY()].setIcon(campIcon); //todo create another icon
                 }
                 fill_state = false;
@@ -580,18 +586,15 @@ public class Game implements ActionListener{
             fill_state = true;
         }
 
-        if(!lantern_state && !shoot_state && !fill_state){
-            normal_state = true;
-        }  else normal_state = false;
+        normal_state = !lantern_state && !shoot_state && !fill_state;
 
 
         if(!normal_state) hideNonDirectionButtons();
         updateConsoleAndButtons();
-        this.updateBoard();
         if(normal_state) monsterTurn();
     }
 
-    public void removeWumpus()
+    public void removeWumpus() //todo use
     {
         board[wumpus.getX()][wumpus.getY()].setWumpus(false);
         campLabels[wumpus.getX()][wumpus.getY()].setIcon(campIcon);
@@ -599,17 +602,45 @@ public class Game implements ActionListener{
 
     public void removeMonster2()
     {
-
         board[monster2.getX()][monster2.getY()].setWumpus(false);
         campLabels[monster2.getX()][monster2.getY()].setIcon(campIcon);
     }
 
     public void updateWind(int x, int y)
     {
-        if(x + 1 < board.length) board[x+1][y].setWindy(false); //todo false positives here
-        if(y + 1 < board.length) board[x][y+1].setWindy(false);
-        if(x - 1 >= 0) board[x-1][y].setWindy(false);
-        if(y - 1 >= 0) board[x][y-1].setWindy(false);
+        if(hasNearbyPit(x,y))
+            board[x][y].setWindy(true);
+        if(x + 1 < board.length){
+            if(!hasNearbyPit(x + 1, y))
+                board[x + 1][y].setWindy(false);
+        }
+        if(y + 1 < board.length){
+            if(!hasNearbyPit(x, y + 1))
+                board[x][y + 1].setWindy(false);
+        }
+        if(x - 1 >= 0){
+            if(!hasNearbyPit(x - 1, y))
+                board[x - 1][y].setWindy(false);
+        }
+        if(y - 1 >= 0){
+            if(!hasNearbyPit(x, y - 1))
+                board[x][y - 1].setWindy(false);
+        }
+    }
+
+    public boolean hasNearbyPit(int x, int y)
+    {
+        int pits = 0;
+        if(y + 1 < board.length)
+            if(board[x][y + 1].isPit()) pits++;
+        if(x + 1 < board.length)
+            if(board[x + 1][y].isPit()) pits++;
+        if(y - 1 >= 0)
+            if(board[x][y - 1].isPit()) pits++;
+        if(x - 1 >= 0)
+            if(board[x - 1][y].isPit()) pits++;
+
+        return pits > 0;
     }
     public void setRand(Random rand) {
         this.rand = rand;
