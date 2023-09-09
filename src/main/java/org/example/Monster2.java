@@ -10,6 +10,8 @@ public class Monster2 {
     private int previousX;
     private int y;
     private int previousY;
+
+    private boolean alive = true;
     public void checkPlayerContact(Player player)
     {
         if(player.getX() == x && player.getY() == y)
@@ -116,5 +118,9 @@ public class Monster2 {
 
     public int getPreviousY() {
         return previousY;
+    }
+
+    public boolean isAlive() {
+        return alive;
     }
 }

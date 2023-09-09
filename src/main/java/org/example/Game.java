@@ -19,6 +19,9 @@ public class Game implements ActionListener{
     private JLabel[][] campLabels;
     private final int size;
     private JTextArea console;
+    private  JButton drop_b;
+    private JButton arrow_b;
+    private  JButton shoot_b;
     private JButton lantern_b;
     private JButton gold_b;
     private JButton wood_b;
@@ -65,44 +68,60 @@ public class Game implements ActionListener{
 
 
         up_b = new JButton();
-        up_b.setVisible(true);
         right_b = new JButton();
-        right_b.setVisible(true);
         left_b = new JButton();
-        left_b.setVisible(true);
         down_b = new JButton();
-        down_b.setVisible(true);
+        drop_b = new JButton("Largar item");
         lantern_b = new JButton("Usar lanterna");
-        lantern_b.setVisible(true);
         gold_b = new JButton("Pegar ouro");
-        gold_b.setEnabled(false);
-        gold_b.setVisible(false);
         wood_b = new JButton("Pegar madeira");
-        wood_b.setEnabled(false);
+        arrow_b = new JButton("Fazer flecha");
+        shoot_b = new JButton("Atirar flecha");
+
+        up_b.setVisible(true);
+        right_b.setVisible(true);
+        left_b.setVisible(true);
+        down_b.setVisible(true);
+        drop_b.setVisible(true);
+        lantern_b.setVisible(true);
+        gold_b.setVisible(false);
         wood_b.setVisible(false);
+        arrow_b.setVisible(false);
+        shoot_b.setVisible(false);
+
+        gold_b.setEnabled(false);
+        wood_b.setEnabled(false);
+        arrow_b.setEnabled(false);
 
         console = new JTextArea();
         console.setVisible(true);
-        up_b.setIcon(new ImageIcon(new ImageIcon("resources\\upArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width),((height-titleSize)/7), Image.SCALE_DEFAULT)));
-        right_b.setIcon(new ImageIcon(new ImageIcon("resources\\rightArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width), ((height-titleSize)/7), Image.SCALE_DEFAULT)));
-        left_b.setIcon(new ImageIcon(new ImageIcon("resources\\leftArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width), ((height-titleSize)/7), Image.SCALE_DEFAULT)));
-        down_b.setIcon(new ImageIcon(new ImageIcon("resources\\downArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width), ((height-titleSize)/7), Image.SCALE_DEFAULT)));
+        up_b.setIcon(new ImageIcon(new ImageIcon("resources\\upArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width),((height-titleSize)/13), Image.SCALE_DEFAULT)));
+        right_b.setIcon(new ImageIcon(new ImageIcon("resources\\rightArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width), ((height-titleSize)/13), Image.SCALE_DEFAULT)));
+        left_b.setIcon(new ImageIcon(new ImageIcon("resources\\leftArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width), ((height-titleSize)/13), Image.SCALE_DEFAULT)));
+        down_b.setIcon(new ImageIcon(new ImageIcon("resources\\downArrow-nobg.png").getImage().getScaledInstance((int)(0.1*width), ((height-titleSize)/13), Image.SCALE_DEFAULT)));
 
         up_b.addActionListener(this);
         right_b.addActionListener(this);
         left_b.addActionListener(this);
         down_b.addActionListener(this);
+        drop_b.addActionListener(this);
         lantern_b.addActionListener(this);
-        gold_b.addActionListener(this);
+        shoot_b.addActionListener(this);
+        arrow_b.addActionListener(this);
         wood_b.addActionListener(this);
+        gold_b.addActionListener(this);
 
         playerPanel.add(up_b);
         playerPanel.add(right_b);
         playerPanel.add(left_b);
         playerPanel.add(down_b);
+        playerPanel.add(drop_b);
         playerPanel.add(lantern_b);
-        playerPanel.add(gold_b);
+        playerPanel.add(shoot_b);
+        playerPanel.add(arrow_b);
         playerPanel.add(wood_b);
+        playerPanel.add(gold_b);
+
         playerPanel.add(console);
 
         tilePanel.setBounds(0,0, (int)(0.8*width),height-titleSize);
@@ -320,23 +339,30 @@ public class Game implements ActionListener{
             console.append("Voce consegue ver algo brilhante...\n");
             gold_b.setVisible(true);
             gold_b.setEnabled(true);
+        }  else{
+            gold_b.setVisible(false);
+            gold_b.setEnabled(false);
         }
         if (board[player.getX()][player.getY()].isWood()) {
             console.append("Voce pisa em uma madeira\n");
             wood_b.setVisible(true);
             wood_b.setEnabled(true);
-        }
-
-        if(!board[player.getX()][player.getY()].isGold())
-        {
-            gold_b.setVisible(false);
-            gold_b.setEnabled(false);
-        }
-        if(!board[player.getX()][player.getY()].isWood())
-        {
+            arrow_b.setVisible(true);
+            arrow_b.setEnabled(true);
+        }  else{
             wood_b.setVisible(false);
             wood_b.setEnabled(false);
+            arrow_b.setVisible(false);
+            arrow_b.setEnabled(false);
         }
+        if(player.isArrow()){
+            shoot_b.setVisible(true);
+            shoot_b.setEnabled(true);
+        }  else{
+            shoot_b.setVisible(false);
+            shoot_b.setEnabled(false);
+        }
+
         campLabels[player.getX()][player.getY()].setVisible(true);
     }
     public void checkIfOver()

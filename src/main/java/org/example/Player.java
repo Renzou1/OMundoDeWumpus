@@ -164,7 +164,7 @@ public class Player {
 
     public boolean isArrow()
     {
-        if(arrows == 1)
+        if(arrows >= 1)
             return true;
         return false;
     }

@@ -10,6 +10,7 @@ public class Wumpus {
     private int previousX;
     private int y;
     private int previousY;
+    private boolean alive = true;
     public void createSmellAndPosition(Camp[][] board)
     {
         board[x][y].setWumpus(true);
@@ -74,5 +75,9 @@ public class Wumpus {
 
     public int getPreviousY() {
         return previousY;
+    }
+
+    public boolean isAlive() {
+        return alive;
     }
 }
