@@ -153,23 +153,26 @@ public class Game implements ActionListener {
         int x;
         int y;
 
+        int boardCamps = board.length * board.length;
+        int desiredAmount = boardCamps*10/100;
+        int current = 0;
         //creates Pit
         do {
             x = rand.nextInt(board.length);
             y = rand.nextInt(board.length);
-        } while (x == 0 && y == 0);
-
-        board[x][y].setPit(true);
-        if(x + 1 < board.length) board[x+1][y].setWindy(true);
-        if(y + 1 < board.length) board[x][y+1].setWindy(true);
-        if(x - 1 >= 0) board[x-1][y].setWindy(true);
-        if(y - 1 >= 0) board[x][y-1].setWindy(true);
+            current++;
+            board[x][y].setPit(true);
+            if(x + 1 < board.length) board[x+1][y].setWindy(true);
+            if(y + 1 < board.length) board[x][y+1].setWindy(true);
+            if(x - 1 >= 0) board[x-1][y].setWindy(true);
+            if(y - 1 >= 0) board[x][y-1].setWindy(true);
+        } while (current < desiredAmount || (x == 0 && y == 0));
 
         //creates Wumpus
         do {
             x = rand.nextInt(board.length);
             y = rand.nextInt(board.length);
-        } while (x == 0 && y == 0  && !board[x][y].isPit());
+        } while ((x == 0 && y == 0)  || board[x][y].isPit());
 
         board[x][y].setWumpus(true);
         wumpus.setX(x);
@@ -180,7 +183,7 @@ public class Game implements ActionListener {
         do {
             x = rand.nextInt(board.length);
             y = rand.nextInt(board.length);
-        } while (x == 0 && y == 0  && !board[x][y].isPit());
+        } while ((x == 0 && y == 0)  || board[x][y].isPit());
 
         board[x][y].setMonster2(true);
         monster2.setX(x);
@@ -189,16 +192,19 @@ public class Game implements ActionListener {
         do {
             x = rand.nextInt(board.length);
             y = rand.nextInt(board.length);
-        } while (x == 0 && y == 0  && !board[x][y].isPit());
+        } while ((x == 0 && y == 0)  || board[x][y].isPit());
 
         board[x][y].setGold(true);
 
+        desiredAmount = boardCamps*5/100;
+        current = 0;
         do {
             x = rand.nextInt(board.length);
             y = rand.nextInt(board.length);
-        } while (x == 0 && y == 0  && !board[x][y].isPit());
+            current++;
+            board[x][y].setWood(true);
+        } while (current < desiredAmount || (x == 0 && y == 0)  || board[x][y].isPit());
 
-        board[x][y].setWood(true);
         this.updateBoard();
     }
 
@@ -345,7 +351,7 @@ public class Game implements ActionListener {
                 wood_b.setVisible(false);
                 wood_b.setEnabled(false);
             }
-            monsterTurn();
+            if(!lantern) monsterTurn();
 
         } else if (e.getSource() == up_b) {
             player.useLantern(board, UP);

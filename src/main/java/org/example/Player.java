@@ -16,30 +16,34 @@ public class Player {
     {
         if( y + 1 < board.length)
         {
-            previousX = x;
-            previousY = y;
-            board[x][y].setPlayer(false);
-            y++;
-            board[x][y].setPlayer(true);
-            board[x][y].setHidden(false);
+            if(!board[x][y+1].isPit()) {
+                previousX = x;
+                previousY = y;
+                board[x][y].setPlayer(false);
+                y++;
+                board[x][y].setPlayer(true);
+                board[x][y].setHidden(false);
+            }
         }
     }
 
     public void moveRight(Camp[][] board)
     {
         if(x + 1 < board.length) {
-            previousX = x;
-            previousY = y;
-            board[x][y].setPlayer(false);
-            x++;
-            board[x][y].setPlayer(true);
-            board[x][y].setHidden(false);
+            if(!board[x+1][y].isPit()) {
+                previousX = x;
+                previousY = y;
+                board[x][y].setPlayer(false);
+                x++;
+                board[x][y].setPlayer(true);
+                board[x][y].setHidden(false);
+            }
         }
     }
 
     public void moveLeft(Camp[][] board)
     {
-        if(x - 1 >= 0) {
+        if(x - 1 >= 0 && !board[x-1][y].isPit()) {
             previousX = x;
             previousY = y;
             board[x][y].setPlayer(false);
@@ -51,7 +55,7 @@ public class Player {
 
     public void moveDown(Camp[][] board)
     {
-        if(y - 1 >= 0)
+        if(y - 1 >= 0 && !board[x][y-1].isPit())
         {
             previousX = x;
             previousY = y;
