@@ -14,11 +14,10 @@ public class Main {
     private static int width;
     private static int height;
     private static int size;
-    private static boolean clear;
     public static void main(String[] args) {
         createOptionsGUI();
-        startGame();
     }
+
 
     public static void createOptionsGUI()
     {
@@ -49,23 +48,20 @@ public class Main {
         inicio.setVisible(true);
         inicio.setBounds(0,0, 400, 100);
         inicio.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        while(!clear) {
-            ok.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
+        ok.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-                    if (e.getSource() == ok) {
-                        width = Integer.parseInt(width_t.getText());
-                        height = Integer.parseInt(height_t.getText());
-                        size = Integer.parseInt(size_t.getText());
-                        clear = true;
-                        inicio.setVisible(false);
-                        inicio.dispose();
-                    }
+                if (e.getSource() == ok) {
+                    width = Integer.parseInt(width_t.getText());
+                    height = Integer.parseInt(height_t.getText());
+                    size = Integer.parseInt(size_t.getText());
+                    inicio.setVisible(false);
+                    inicio.dispose();
+                    startGame();
                 }
-            });
-        }
-
+            }
+        });
     }
     public static void startGame()
     {
