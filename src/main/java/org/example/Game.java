@@ -255,9 +255,13 @@ public class Game implements ActionListener{
         updateBoard();
     }
     public void playerTurn() {
-
         checkIfOver();
+        updateConsoleAndButtons();
+    }
 
+
+    public void updateConsoleAndButtons()
+    {
         console.setText("");
         console.append("Vida: " + player.getHealth() + "\n");
         if(player.getWood() > 0) console.append("Madeiras em inventario: " + player.getWood() + "\n");
@@ -308,7 +312,6 @@ public class Game implements ActionListener{
         }
         campLabels[player.getX()][player.getY()].setVisible(true);
     }
-
     public void checkIfOver()
     {
         if (board[player.getX()][player.getY()].isWumpus() || player.getHealth() <= 0) {
@@ -370,18 +373,22 @@ public class Game implements ActionListener{
 
         } else if (e.getSource() == up_b) {
             player.useLantern(board, UP);
+            updateConsoleAndButtons();
             updateHidden();
             lantern = false;
         } else if (e.getSource() == right_b) {
             player.useLantern(board, RIGHT);
+            updateConsoleAndButtons();
             updateHidden();
             lantern = false;
         } else if (e.getSource() == left_b) {
             player.useLantern(board, LEFT);
+            updateConsoleAndButtons();
             updateHidden();
             lantern = false;
         } else if (e.getSource() == down_b) {
             player.useLantern(board, DOWN);
+            updateConsoleAndButtons();
             updateHidden();
             lantern = false;
         }
