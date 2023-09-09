@@ -154,4 +154,18 @@ public class Player {
         if(battery > 0) weight++; //adds lantern
         return weight;
     }
+
+    public boolean isBow()
+    {
+        if(bow == 1)
+            return true;
+        return false;
+    }
+
+    public boolean isArrow()
+    {
+        if(arrows == 1)
+            return true;
+        return false;
+    }
 }

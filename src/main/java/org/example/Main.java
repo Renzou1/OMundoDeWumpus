@@ -60,8 +60,8 @@ public class Main {
                     inicio.dispose();
                     if(size > 4) startGame();
                     else{
-                        //new JDialog("Size too small");
                         System.exit(0);
+                        //todo message
                     }
 
                 }

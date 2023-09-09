@@ -262,9 +262,36 @@ public class Game implements ActionListener{
 
     public void updateConsoleAndButtons()
     {
+        boolean first = true;
         console.setText("");
         console.append("Vida: " + player.getHealth() + "\n");
-        if(player.getWood() > 0) console.append("Madeiras em inventario: " + player.getWood() + "\n");
+        if(player.getWeight() > 0) {
+            console.append("Carregando: ");
+            if(player.getBattery() > 0){
+                console.append("lanterna");
+                first = false;
+            }
+            if (player.isBow()){
+                if(!first) console.append("/ ");
+                console.append("arco");
+                first = false;
+            }
+            if (player.isArrow()){
+                if(!first) console.append("/ ");
+                console.append("flecha");
+                first = false;
+            }
+            if (player.getWood() > 0){
+                if(!first) console.append("/ ");
+                console.append(player.getWood() + " madeira(s)");
+                first = false;
+            }
+            if (player.isGold()){
+                if(!first) console.append("/ ");
+                console.append("ouro");
+            }
+            console.append("\n");
+        }
         if (board[player.getX()][player.getY()].isSmelly()) {
             console.append("Voce sente o cheiro do wumpus\n");
         }
@@ -359,13 +386,11 @@ public class Game implements ActionListener{
             }  else if (e.getSource() == gold_b) {
                 board[player.getX()][player.getY()].setGold(false);
                 player.setGold(1);
-                console.append("Ouro em inventario.\n"); //todo nao funcina
                 gold_b.setVisible(false);
                 gold_b.setEnabled(false);
             } else if (e.getSource() == wood_b) {
                 board[player.getX()][player.getY()].setWood(false);
                 player.setWood(player.getWood() + 1);
-                console.append("Madeiras em inventario: " + player.getWood());
                 wood_b.setVisible(false);
                 wood_b.setEnabled(false);
             }
