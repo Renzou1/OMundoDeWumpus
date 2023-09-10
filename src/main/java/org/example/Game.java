@@ -318,7 +318,7 @@ public class Game implements ActionListener{
                 }
                 if (player.getArrows() > 0) {
                     if (!first) console.append("/ ");
-                    console.append(player.getArrows() + "flecha(s)");
+                    console.append(player.getArrows() + " flecha(s)");
                     first = false;
                 }
                 if (player.getWood() > 0) {
@@ -563,7 +563,7 @@ public class Game implements ActionListener{
             choose.setLocationRelativeTo(null);
             choose.setSize(600,400);
             choose.setVisible(true);
-            choose.setTitle("Escolha qual largar");
+            choose.setTitle("Escolha qual pegar");
 
             JButton bow = new JButton("Arco");
             JButton arrow = new JButton("Flecha");
