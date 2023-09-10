@@ -2,8 +2,6 @@ package org.example;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Random;
 
 public class Main {
@@ -48,23 +46,20 @@ public class Main {
         inicio.setVisible(true);
         inicio.setBounds(0,0, 400, 100);
         inicio.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ok.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        ok.addActionListener(e -> {
 
-                if (e.getSource() == ok) {
-                    width = Integer.parseInt(width_t.getText());
-                    height = Integer.parseInt(height_t.getText());
-                    size = Integer.parseInt(size_t.getText());
-                    inicio.setVisible(false);
-                    inicio.dispose();
-                    if(size > 4) startGame();
-                    else{
-                        System.exit(0);
-                        //todo message
-                    }
-
+            if (e.getSource() == ok) {
+                width = Integer.parseInt(width_t.getText());
+                height = Integer.parseInt(height_t.getText());
+                size = Integer.parseInt(size_t.getText());
+                inicio.setVisible(false);
+                inicio.dispose();
+                if(size > 4) startGame();
+                else{
+                    System.exit(0);
+                    //todo message
                 }
+
             }
         });
     }
