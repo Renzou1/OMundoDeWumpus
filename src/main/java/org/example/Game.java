@@ -23,7 +23,6 @@ public class Game implements ActionListener{
     private JButton arrow_b;
     private  JButton shoot_b;
     private JButton lantern_b;
-    private JButton gold_b;
     private JButton pick_b;
     private JButton up_b;
     private JButton right_b;
@@ -80,7 +79,6 @@ public class Game implements ActionListener{
         down_b = new JButton();
         drop_b = new JButton("Largar item");
         lantern_b = new JButton("Usar lanterna");
-        gold_b = new JButton("Pegar ouro");
         pick_b = new JButton("Pegar item");
         arrow_b = new JButton("Fazer flecha");
         shoot_b = new JButton("Atirar flecha");
@@ -92,13 +90,11 @@ public class Game implements ActionListener{
         down_b.setVisible(true);
         drop_b.setVisible(true);
         lantern_b.setVisible(true);
-        gold_b.setVisible(false);
         pick_b.setVisible(false);
         arrow_b.setVisible(false);
         shoot_b.setVisible(false);
         fill_b.setVisible(false);
 
-        gold_b.setEnabled(false);
         pick_b.setEnabled(false);
         arrow_b.setEnabled(false);
         shoot_b.setEnabled(false);
@@ -121,7 +117,6 @@ public class Game implements ActionListener{
         shoot_b.addActionListener(this);
         arrow_b.addActionListener(this);
         pick_b.addActionListener(this);
-        gold_b.addActionListener(this);
         fill_b.addActionListener(this);
 
         up_b.setFocusable(false);
@@ -133,7 +128,6 @@ public class Game implements ActionListener{
         shoot_b.setFocusable(false);
         arrow_b.setFocusable(false);
         pick_b.setFocusable(false);
-        gold_b.setFocusable(false);
         fill_b.setFocusable(false);
 
         console.setFocusable(false);
@@ -146,7 +140,6 @@ public class Game implements ActionListener{
         playerPanel.add(lantern_b);
         playerPanel.add(shoot_b);
         playerPanel.add(arrow_b);
-        playerPanel.add(gold_b);
         playerPanel.add(fill_b);
         playerPanel.add(pick_b);
 
@@ -349,6 +342,9 @@ public class Game implements ActionListener{
             if (board[player.getX()][player.getY()].isWindy()) {
                 console.append("Voce sente o vento de um abismo\n");
             }
+            if (board[player.getX()][player.getY()].isGold()) {
+                console.append("Voce encontra algo brilhante...\n");
+            }
             if (player.getX() == board.length - 1) {
                 console.append("Parede a direita\n");
             }
@@ -377,14 +373,6 @@ public class Game implements ActionListener{
             }  else{
                 pick_b.setVisible(false);
                 pick_b.setEnabled(false);
-            }
-            if (board[player.getX()][player.getY()].isGold()) {
-                console.append("Voce consegue ver algo brilhante...\n");
-                gold_b.setVisible(true);
-                gold_b.setEnabled(true);
-            } else {
-                gold_b.setVisible(false);
-                gold_b.setEnabled(false);
             }
             if (board[player.getX()][player.getY()].isWood()) {
                 console.append("Voce pisa em uma madeira\n");
@@ -450,14 +438,12 @@ public class Game implements ActionListener{
     public void hideNonDirectionButtons()
     {
         lantern_b.setVisible(false);
-        gold_b.setVisible(false);
         pick_b.setVisible(false);
         arrow_b.setVisible(false);
         shoot_b.setVisible(false);
         drop_b.setVisible(false);
         fill_b.setVisible(false);
 
-        gold_b.setEnabled(false);
         pick_b.setEnabled(false);
         arrow_b.setEnabled(false);
         shoot_b.setEnabled(false);
@@ -570,13 +556,7 @@ public class Game implements ActionListener{
                 fill_state = false;
             }
 
-        }  else if (source == gold_b) {
-            board[player.getX()][player.getY()].setGold(false);
-            player.setGold(1);
-            gold_b.setVisible(false);
-            gold_b.setEnabled(false);
-
-        } else if (source == pick_b) {
+        }  else if (source == pick_b) {
             gameFrame.setEnabled(false);
             JFrame choose = new JFrame();
             choose.setLayout(new GridLayout(1,0));

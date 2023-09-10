@@ -72,10 +72,10 @@ public class Monster2 {
                 x--;
                 checkPlayerContact(player);
 
-                if (y + 1 >= board.length || (board[x][y + 1].isPit() && !board[x][y-1].isPit()))  //down
+                if (y-1 >= 0 && y + 1 >= board.length || (board[x][y + 1].isPit() && !board[x][y-1].isPit()))  //down
                 {
                     y--;
-                } else if (y - 1 <= 0 || (board[x][y-1].isPit() && !board[x][y + 1].isPit())) {
+                } else if (y + 1 < board.length && y - 1 <= 0 || (board[x][y-1].isPit() && !board[x][y + 1].isPit())) {
                     y++;
                 } else {
                     if (monster2Direction2 == 0 && !board[x][y - 1].isPit()) y--;
@@ -86,10 +86,10 @@ public class Monster2 {
                 y--;
                 checkPlayerContact(player);
                 y--;
-                if (x + 1 >= board.length || (board[x+1][y].isPit() && !board[x-1][y].isPit()))  //left
+                if (x - 1 >= 0 && x + 1 >= board.length || (board[x+1][y].isPit() && !board[x-1][y].isPit()))  //left
                 {
                     x--;
-                } else if (x - 1 <= 0 || (board[x-1][y].isPit() && !board[x+1][y].isPit())) {
+                } else if (x + 1 < board.length && x - 1 <= 0 || (board[x-1][y].isPit() && !board[x+1][y].isPit())) {
                     x++;
                 } else {
                     if (monster2Direction2 == 0 && !board[x-1][y].isPit()) x--;
