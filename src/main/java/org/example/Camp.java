@@ -101,7 +101,24 @@ public class Camp {
         isBow = bow;
     }
 
+    public boolean isArrow() {
+        return isArrow;
+    }
+
     public void setArrow(boolean arrow) {
         isArrow = arrow;
+    }
+
+    public boolean isBow() {
+        return isBow;
+    }
+
+    public boolean isLantern() {
+        return isLantern;
+    }
+
+    public boolean isItem(){
+        if(isGold || isLantern || isArrow || isWood || isBow) return true;
+        return false;
     }
 }

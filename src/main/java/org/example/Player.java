@@ -177,7 +177,13 @@ public class Player {
         this.bow = bow;
     }
 
+    public boolean isLantern() {
+        return lantern;
+    }
+
     public void setLantern(boolean lantern) {
         this.lantern = lantern;
     }
+
+
 }

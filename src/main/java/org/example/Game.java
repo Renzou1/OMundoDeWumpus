@@ -24,7 +24,7 @@ public class Game implements ActionListener{
     private  JButton shoot_b;
     private JButton lantern_b;
     private JButton gold_b;
-    private JButton wood_b;
+    private JButton pick_b;
     private JButton up_b;
     private JButton right_b;
     private JButton left_b;
@@ -81,7 +81,7 @@ public class Game implements ActionListener{
         drop_b = new JButton("Largar item");
         lantern_b = new JButton("Usar lanterna");
         gold_b = new JButton("Pegar ouro");
-        wood_b = new JButton("Pegar madeira");
+        pick_b = new JButton("Pegar item");
         arrow_b = new JButton("Fazer flecha");
         shoot_b = new JButton("Atirar flecha");
         fill_b = new JButton("Tapar abismo");
@@ -93,13 +93,13 @@ public class Game implements ActionListener{
         drop_b.setVisible(true);
         lantern_b.setVisible(true);
         gold_b.setVisible(false);
-        wood_b.setVisible(false);
+        pick_b.setVisible(false);
         arrow_b.setVisible(false);
         shoot_b.setVisible(false);
         fill_b.setVisible(false);
 
         gold_b.setEnabled(false);
-        wood_b.setEnabled(false);
+        pick_b.setEnabled(false);
         arrow_b.setEnabled(false);
         shoot_b.setEnabled(false);
         fill_b.setEnabled(false);
@@ -120,7 +120,7 @@ public class Game implements ActionListener{
         lantern_b.addActionListener(this);
         shoot_b.addActionListener(this);
         arrow_b.addActionListener(this);
-        wood_b.addActionListener(this);
+        pick_b.addActionListener(this);
         gold_b.addActionListener(this);
         fill_b.addActionListener(this);
 
@@ -132,7 +132,7 @@ public class Game implements ActionListener{
         lantern_b.setFocusable(false);
         shoot_b.setFocusable(false);
         arrow_b.setFocusable(false);
-        wood_b.setFocusable(false);
+        pick_b.setFocusable(false);
         gold_b.setFocusable(false);
         fill_b.setFocusable(false);
 
@@ -146,9 +146,9 @@ public class Game implements ActionListener{
         playerPanel.add(lantern_b);
         playerPanel.add(shoot_b);
         playerPanel.add(arrow_b);
-        playerPanel.add(wood_b);
         playerPanel.add(gold_b);
         playerPanel.add(fill_b);
+        playerPanel.add(pick_b);
 
         playerPanel.add(console);
 
@@ -314,7 +314,7 @@ public class Game implements ActionListener{
             console.append("Vida: " + player.getHealth() + "\n");
             if (player.getWeight() > 0) {
                 console.append("Carregando: ");
-                if (player.getBattery() > 0) {
+                if (player.getBattery() > 0 && player.isLantern()) {
                     console.append("lanterna");
                     first = false;
                 }
@@ -358,6 +358,14 @@ public class Game implements ActionListener{
                 console.append("Parede a esquerda.\n");
             }
 
+            if(board[player.getX()][player.getY()].isItem())
+            {
+                pick_b.setVisible(true);
+                pick_b.setEnabled(true);
+            }  else{
+                pick_b.setVisible(false);
+                pick_b.setEnabled(false);
+            }
             if (board[player.getX()][player.getY()].isGold()) {
                 console.append("Voce consegue ver algo brilhante...\n");
                 gold_b.setVisible(true);
@@ -368,13 +376,9 @@ public class Game implements ActionListener{
             }
             if (board[player.getX()][player.getY()].isWood()) {
                 console.append("Voce pisa em uma madeira\n");
-                wood_b.setVisible(true);
-                wood_b.setEnabled(true);
                 arrow_b.setVisible(true);
                 arrow_b.setEnabled(true);
             } else {
-                wood_b.setVisible(false);
-                wood_b.setEnabled(false);
                 arrow_b.setVisible(false);
                 arrow_b.setEnabled(false);
             }
@@ -446,14 +450,14 @@ public class Game implements ActionListener{
     {
         lantern_b.setVisible(false);
         gold_b.setVisible(false);
-        wood_b.setVisible(false);
+        pick_b.setVisible(false);
         arrow_b.setVisible(false);
         shoot_b.setVisible(false);
         drop_b.setVisible(false);
         fill_b.setVisible(false);
 
         gold_b.setEnabled(false);
-        wood_b.setEnabled(false);
+        pick_b.setEnabled(false);
         arrow_b.setEnabled(false);
         shoot_b.setEnabled(false);
         drop_b.setEnabled(false);
@@ -575,11 +579,92 @@ public class Game implements ActionListener{
             gold_b.setVisible(false);
             gold_b.setEnabled(false);
 
-        } else if (source == wood_b) {
-            board[player.getX()][player.getY()].setWood(false);
-            player.setWood(player.getWood() + 1);
-            wood_b.setVisible(false);
-            wood_b.setEnabled(false);
+        } else if (source == pick_b) {
+            gameFrame.setEnabled(false);
+            JFrame choose = new JFrame();
+            choose.setLayout(new GridLayout(1,0));
+            choose.setLocationRelativeTo(null);
+            choose.setSize(600,400);
+            choose.setVisible(true);
+            choose.setTitle("Escolha qual largar");
+
+            JButton bow = new JButton("Arco");
+            JButton arrow = new JButton("Flecha");
+            JButton gold = new JButton("Ouro");
+            JButton lantern = new JButton("Lanterna");
+            JButton wood = new JButton("Madeira");
+
+            ActionListener local = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    Object source = e.getSource();
+                    if(source == bow)
+                    {
+                        player.setBow(1);
+                        board[player.getX()][player.getY()].setBow(false);
+                    }
+                    if(source == arrow)
+                    {
+                        player.setArrows(player.getArrows() + 1);
+                        board[player.getX()][player.getY()].setArrow(false);
+                    }
+                    if(source == gold)
+                    {
+                        player.setGold(1);
+                        board[player.getX()][player.getY()].setGold(false);
+                    }
+                    if(source == lantern)
+                    {
+                        player.setLantern(true);
+                        board[player.getX()][player.getY()].setLantern(false);
+                    }
+                    if(source == wood)
+                    {
+                        player.setWood(player.getWood() + 1);
+                        board[player.getX()][player.getY()].setWood(false);
+                    }
+                    gameFrame.setEnabled(true);
+                    updateConsoleAndButtons();
+                    choose.dispose();
+                }
+            };
+
+            if(board[player.getX()][player.getY()].isBow()) {
+                bow.setVisible(true);
+                bow.setEnabled(true);
+                bow.addActionListener(local);
+                bow.setFocusable(false);
+                choose.add(bow);
+            }
+            if(board[player.getX()][player.getY()].isArrow()) {
+                arrow.setVisible(true);
+                arrow.setEnabled(true);
+                arrow.addActionListener(local);
+                arrow.setFocusable(false);
+                choose.add(arrow);
+            }
+            if(board[player.getX()][player.getY()].isGold()) {
+                gold.setVisible(true);
+                gold.setEnabled(true);
+                gold.addActionListener(local);
+                gold.setFocusable(false);
+                choose.add(gold);
+            }
+            if(board[player.getX()][player.getY()].isLantern()) {
+                lantern.setVisible(true);
+                lantern.setEnabled(true);
+                lantern.addActionListener(local);
+                lantern.setFocusable(false);
+                choose.add(lantern);
+            }
+            if(board[player.getX()][player.getY()].isWood()) {
+                wood.setVisible(true);
+                wood.setEnabled(true);
+                wood.addActionListener(local);
+                wood.setFocusable(false);
+                choose.add(wood);
+            }
+
 
         }  else if (source == drop_b){
             gameFrame.setEnabled(false);
@@ -625,6 +710,7 @@ public class Game implements ActionListener{
                         player.setWood(player.getWood() - 1);
                         board[player.getX()][player.getY()].setWood(true);
                     }
+                    updateConsoleAndButtons();
                     gameFrame.setEnabled(true);
                     choose.dispose();
                 }
