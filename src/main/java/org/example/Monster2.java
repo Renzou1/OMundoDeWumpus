@@ -98,6 +98,7 @@ public class Monster2 {
                 y--;
                 checkPlayerContact(player);
                 y--;
+                checkPlayerContact(player);
                 if (x + 1 >= board.length || (board[x+1][y].isPit()))  //left
                 {
                     if(x - 1 >= 0)

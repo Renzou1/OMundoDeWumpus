@@ -72,7 +72,6 @@ public class Game implements ActionListener{
         playerPanel.setVisible(true);
         playerPanel.setLayout(new GridLayout(0,1));
 
-
         up_b = new JButton();
         right_b = new JButton();
         left_b = new JButton();
@@ -147,15 +146,17 @@ public class Game implements ActionListener{
 
         tilePanel.setBounds(0,0, (int)(0.8*width),height-titleSize);
         playerPanel.setBounds(tilePanel.getWidth(), 0,  width-tilePanel.getWidth(), height-titleSize);
-        playerIcon = new ImageIcon(new ImageIcon("resources\\Player.png").getImage().getScaledInstance((tilePanel.getWidth()/board.length), (tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
-        campIcon = new ImageIcon(new ImageIcon("resources\\Camp.png").getImage().getScaledInstance((tilePanel.getWidth()/board.length), (tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
-        wumpusIcon = new ImageIcon(new ImageIcon("resources\\Wumpus.png").getImage().getScaledInstance((tilePanel.getWidth()/board.length), (tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
-        monster2Icon = new ImageIcon(new ImageIcon("resources\\Monster2.png").getImage().getScaledInstance((tilePanel.getWidth()/board.length), (tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
+        int real_width = tilePanel.getWidth()/ board.length;
+        int real_height = tilePanel.getHeight() / board.length;
+        playerIcon = new ImageIcon(new ImageIcon("resources\\Player.png").getImage().getScaledInstance((real_width), (real_height), Image.SCALE_DEFAULT));
+        campIcon = new ImageIcon(new ImageIcon("resources\\Camp.png").getImage().getScaledInstance((real_width), (real_height), Image.SCALE_DEFAULT));
+        wumpusIcon = new ImageIcon(new ImageIcon("resources\\Wumpus.png").getImage().getScaledInstance((real_width), (real_height), Image.SCALE_DEFAULT));
+        monster2Icon = new ImageIcon(new ImageIcon("resources\\Monster2.png").getImage().getScaledInstance((real_width), (real_height), Image.SCALE_DEFAULT));
         ImageIcon[] hiddenIcon = new ImageIcon[4];
-        hiddenIcon[0] = new ImageIcon(new ImageIcon("resources\\Hidden1.png").getImage().getScaledInstance((tilePanel.getWidth()/board.length), (tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
-        hiddenIcon[1] = new ImageIcon(new ImageIcon("resources\\Hidden2.png").getImage().getScaledInstance((tilePanel.getWidth()/board.length), (tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
-        hiddenIcon[2] = new ImageIcon(new ImageIcon("resources\\Hidden3.png").getImage().getScaledInstance((tilePanel.getWidth()/board.length), (tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
-        hiddenIcon[3] = new ImageIcon(new ImageIcon("resources\\Hidden4.png").getImage().getScaledInstance((tilePanel.getWidth()/board.length), (tilePanel.getHeight()/board.length), Image.SCALE_DEFAULT));
+        hiddenIcon[0] = new ImageIcon(new ImageIcon("resources\\Hidden1.png").getImage().getScaledInstance((real_width), (real_height), Image.SCALE_DEFAULT));
+        hiddenIcon[1] = new ImageIcon(new ImageIcon("resources\\Hidden2.png").getImage().getScaledInstance((real_width), (real_height), Image.SCALE_DEFAULT));
+        hiddenIcon[2] = new ImageIcon(new ImageIcon("resources\\Hidden3.png").getImage().getScaledInstance((real_width), (real_height), Image.SCALE_DEFAULT));
+        hiddenIcon[3] = new ImageIcon(new ImageIcon("resources\\Hidden4.png").getImage().getScaledInstance((real_width), (real_height), Image.SCALE_DEFAULT));
 
 
         int hiddenType;
@@ -741,7 +742,7 @@ public class Game implements ActionListener{
         updateConsoleAndButtons();
         if(normal_state) monsterTurn();
     }
-    public void removeWumpus() //todo use
+    public void removeWumpus()
     {
         board[wumpus.getX()][wumpus.getY()].setWumpus(false);
         campLabels[wumpus.getX()][wumpus.getY()].setIcon(campIcon);

@@ -10,7 +10,6 @@ public class Player {
     private int health = 100;
     private int wood = 0;
     private int battery = 2;
-
     private boolean lantern = true;
     private int gold = 0;
     private int bow = 1;
@@ -126,9 +125,7 @@ public class Player {
     }
 
     public boolean isGold() {
-        if(gold == 1)
-        return true;
-        return false;
+        return gold == 1;
     }
 
     public void setGold(int gold) {
@@ -159,9 +156,7 @@ public class Player {
 
     public boolean isBow()
     {
-        if(bow == 1)
-            return true;
-        return false;
+        return bow == 1;
     }
 
     public int getArrows()
