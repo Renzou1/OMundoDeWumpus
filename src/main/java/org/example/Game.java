@@ -787,6 +787,5 @@ public class Game implements ActionListener{
         return pits > 0;
     }
 
-
 }
 
