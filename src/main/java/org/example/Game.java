@@ -469,8 +469,10 @@ public class Game implements ActionListener{
                 lantern_state = false;
             }  else if (shoot_state){
                 player.setArrows(player.getArrows() - 1);
-               if(player.getY() + 1 < board.length && board[player.getX()][player.getY() + 1].isWumpus())
+               if(player.getY() + 1 < board.length && board[player.getX()][player.getY() + 1].isWumpus()) {
+                   wumpus.clearSmellAndPosition(board);
                    wumpus.setAlive(false);
+               }
                 if(player.getY() + 1 < board.length && board[player.getX()][player.getY() + 1].isMonster2())
                     monster2.setAlive(false);
                 shoot_state = false;
@@ -494,8 +496,10 @@ public class Game implements ActionListener{
                 lantern_state = false;
             }  else if (shoot_state){
                 player.setArrows(player.getArrows() - 1);
-               if(player.getX() + 1 < board.length && board[player.getX() + 1][player.getY()].isWumpus())
+               if(player.getX() + 1 < board.length && board[player.getX() + 1][player.getY()].isWumpus()) {
+                   wumpus.clearSmellAndPosition(board);
                    wumpus.setAlive(false);
+               }
                 if(player.getX() + 1 < board.length && board[player.getX() + 1][player.getY()].isMonster2())
                     monster2.setAlive(false);
                 shoot_state = false;
@@ -518,8 +522,10 @@ public class Game implements ActionListener{
                 lantern_state = false;
             }  else if (shoot_state){
                 player.setArrows(player.getArrows() - 1);
-               if(player.getX() - 1 >= 0 && board[player.getX() - 1][player.getY()].isWumpus())
+               if(player.getX() - 1 >= 0 && board[player.getX() - 1][player.getY()].isWumpus()) {
+                   wumpus.clearSmellAndPosition(board);
                    wumpus.setAlive(false);
+               }
                 if(player.getX() - 1 >= 0 && board[player.getX() - 1][player.getY()].isMonster2())
                     monster2.setAlive(false);
                 shoot_state = false;
@@ -542,8 +548,10 @@ public class Game implements ActionListener{
                 lantern_state = false;
             }  else if (shoot_state){
                 player.setArrows(player.getArrows() - 1);
-               if(player.getY() - 1 >= 0 && board[player.getX()][player.getY() - 1].isWumpus())
+               if(player.getY() - 1 >= 0 && board[player.getX()][player.getY() - 1].isWumpus()) {
+                   wumpus.clearSmellAndPosition(board);
                    wumpus.setAlive(false);
+               }
                 if(player.getY() - 1 >= 0 && board[player.getX()][player.getY() - 1].isMonster2())
                     monster2.setAlive(false);
                 shoot_state = false;
@@ -558,13 +566,14 @@ public class Game implements ActionListener{
             }
 
         }  else if (source == pick_b) {
-            gameFrame.setEnabled(false);
+            //gameFrame.setEnabled(false);
             JFrame choose = new JFrame();
             choose.setLayout(new GridLayout(1,0));
             choose.setLocationRelativeTo(null);
             choose.setSize(600,400);
             choose.setVisible(true);
             choose.setTitle("Escolha qual pegar");
+            choose.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
             JButton bow = new JButton("Arco");
             JButton arrow = new JButton("Flecha");
@@ -642,13 +651,14 @@ public class Game implements ActionListener{
 
 
         }  else if (source == drop_b){
-            gameFrame.setEnabled(false);
+            //gameFrame.setEnabled(false);
             JFrame choose = new JFrame();
             choose.setLayout(new GridLayout(1,0));
             choose.setLocationRelativeTo(null);
             choose.setSize(600,400);
             choose.setVisible(true);
             choose.setTitle("Escolha qual largar");
+            choose.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
             JButton bow = new JButton("Arco");
             JButton arrow = new JButton("Flecha");
