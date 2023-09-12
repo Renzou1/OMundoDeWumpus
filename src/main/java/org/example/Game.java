@@ -566,7 +566,7 @@ public class Game implements ActionListener{
             }
 
         }  else if (source == pick_b) {
-            //gameFrame.setEnabled(false);
+            gameFrame.setEnabled(false);
             JFrame choose = new JFrame();
             choose.setLayout(new GridLayout(1,0));
             choose.setLocationRelativeTo(null);
@@ -651,7 +651,7 @@ public class Game implements ActionListener{
 
 
         }  else if (source == drop_b){
-            //gameFrame.setEnabled(false);
+            gameFrame.setEnabled(false); //todo
             JFrame choose = new JFrame();
             choose.setLayout(new GridLayout(1,0));
             choose.setLocationRelativeTo(null);
