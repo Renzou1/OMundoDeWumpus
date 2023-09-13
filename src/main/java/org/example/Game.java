@@ -34,6 +34,7 @@ public class Game implements ActionListener{
     private ImageIcon playerIcon;
     private ImageIcon wumpusIcon;
     private ImageIcon monster2Icon;
+    private ImageIcon pitIcon;
     private boolean lantern_state = false;
     private boolean shoot_state = false;
     private boolean fill_state = false;
@@ -157,6 +158,8 @@ public class Game implements ActionListener{
         hiddenIcon[1] = new ImageIcon(new ImageIcon("resources\\Hidden2.png").getImage().getScaledInstance((real_width), (real_height), Image.SCALE_DEFAULT));
         hiddenIcon[2] = new ImageIcon(new ImageIcon("resources\\Hidden3.png").getImage().getScaledInstance((real_width), (real_height), Image.SCALE_DEFAULT));
         hiddenIcon[3] = new ImageIcon(new ImageIcon("resources\\Hidden4.png").getImage().getScaledInstance((real_width), (real_height), Image.SCALE_DEFAULT));
+        pitIcon = new ImageIcon(new ImageIcon("resources\\Pit.png").getImage().getScaledInstance((real_width), (real_height), Image.SCALE_DEFAULT));
+
 
 
         int hiddenType;
@@ -292,7 +295,7 @@ public class Game implements ActionListener{
             for(int j = 0; j < board.length; j++)
                 if(!board[i][j].isHidden()){
                     if(!board[i][j].isPit()) campLabels[i][j].setIcon(campIcon);
-                    //else TODO add pit icon
+                    else campLabels[i][j].setIcon(pitIcon);
                 }
         updateBoard();
     }

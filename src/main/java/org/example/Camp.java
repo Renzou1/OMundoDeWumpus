@@ -118,7 +118,6 @@ public class Camp {
     }
 
     public boolean isItem(){
-        if(isGold || isLantern || isArrow || isWood || isBow) return true;
-        return false;
+        return isGold || isLantern || isArrow || isWood || isBow;
     }
 }

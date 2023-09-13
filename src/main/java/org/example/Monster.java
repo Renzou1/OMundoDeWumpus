@@ -9,6 +9,5 @@ abstract public class Monster extends Moveable{
 
     public boolean isAlive() {
         return alive;
-
     }
 }
