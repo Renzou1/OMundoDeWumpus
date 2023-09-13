@@ -2,11 +2,7 @@ package org.example;
 
 import static org.example.Main.*;
 
-public class Player {
-    private int x = 0;
-    private int previousX = 0;
-    private int y = 0;
-    private int previousY = 0;
+public class Player extends Moveable{
     private int health = 100;
     private int wood = 0;
     private int battery = 2;
@@ -14,7 +10,6 @@ public class Player {
     private int gold = 0;
     private int bow = 1;
     private int arrows = 0;
-    private int weight;
 
     public void moveUp(Camp[][] board)
     {
@@ -100,14 +95,6 @@ public class Player {
         }
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
     public int getHealth() {
         return health;
     }
@@ -140,16 +127,8 @@ public class Player {
         this.wood = wood;
     }
 
-    public int getPreviousX() {
-        return previousX;
-    }
-
-    public int getPreviousY() {
-        return previousY;
-    }
-
     public int getWeight() {
-        weight = gold + bow + wood + arrows;
+        int weight = gold + bow + wood + arrows;
         if(battery > 0) weight++; //adds lantern
         return weight;
     }
@@ -179,6 +158,5 @@ public class Player {
     public void setLantern(boolean lantern) {
         this.lantern = lantern;
     }
-
 
 }

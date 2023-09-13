@@ -4,14 +4,8 @@ import java.util.Random;
 
 import static org.example.Main.*;
 
-public class Monster2 {
+public class Monster2 extends Monster{
 
-    private int x;
-    private int previousX;
-    private int y;
-    private int previousY;
-
-    private boolean alive = true;
     public void checkPlayerContact(Player player)
     {
         if(player.getX() == x && player.getY() == y)
@@ -118,35 +112,5 @@ public class Monster2 {
         checkPlayerContact(player); // after second movement
         board[x][y].setMonster2(true);
     }
-    public int getX() {
-        return x;
-    }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y){
-        this.y = y;
-    }
-
-    public int getPreviousX() {
-        return previousX;
-    }
-
-    public int getPreviousY() {
-        return previousY;
-    }
-
-    public void setAlive(boolean alive) {
-        this.alive = alive;
-    }
-
-    public boolean isAlive() {
-        return alive;
-    }
 }
