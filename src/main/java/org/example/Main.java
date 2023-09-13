@@ -57,7 +57,6 @@ public class Main {
                 if(size > 4) startGame();
                 else{
                     System.exit(0);
-                    //todo message
                 }
 
             }

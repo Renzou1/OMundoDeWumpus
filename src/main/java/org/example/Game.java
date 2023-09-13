@@ -573,13 +573,14 @@ public class Game implements ActionListener{
             choose.setSize(600,400);
             choose.setVisible(true);
             choose.setTitle("Escolha qual pegar");
-            choose.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            choose.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
             JButton bow = new JButton("Arco");
             JButton arrow = new JButton("Flecha");
             JButton gold = new JButton("Ouro");
             JButton lantern = new JButton("Lanterna");
             JButton wood = new JButton("Madeira");
+            JButton cancel = new JButton("Cancelar");
 
             ActionListener local = e1 -> {
                 Object source1 = e1.getSource();
@@ -648,23 +649,29 @@ public class Game implements ActionListener{
                 wood.setFocusable(false);
                 choose.add(wood);
             }
+            cancel.setVisible(true);
+            cancel.setEnabled(true);
+            cancel.addActionListener(local);
+            cancel.setFocusable(false);
+            choose.add(cancel);
 
 
         }  else if (source == drop_b){
-            gameFrame.setEnabled(false); //todo
+            gameFrame.setEnabled(false);
             JFrame choose = new JFrame();
             choose.setLayout(new GridLayout(1,0));
             choose.setLocationRelativeTo(null);
             choose.setSize(600,400);
             choose.setVisible(true);
             choose.setTitle("Escolha qual largar");
-            choose.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            choose.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
             JButton bow = new JButton("Arco");
             JButton arrow = new JButton("Flecha");
             JButton gold = new JButton("Ouro");
             JButton lantern = new JButton("Lanterna");
             JButton wood = new JButton("Madeira");
+            JButton cancel = new JButton("Cancelar");
 
             ActionListener local = e12 -> {
                 Object source12 = e12.getSource();
@@ -732,8 +739,11 @@ public class Game implements ActionListener{
                 wood.setFocusable(false);
                 choose.add(wood);
             }
-
-
+            cancel.setVisible(true);
+            cancel.setEnabled(true);
+            cancel.addActionListener(local);
+            cancel.setFocusable(false);
+            choose.add(cancel);
 
         }  else if (source == arrow_b){
             player.setArrows(player.getArrows() + 1);
